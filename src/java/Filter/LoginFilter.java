@@ -49,7 +49,7 @@ public class LoginFilter implements Filter {
         if (session == null || session.getAttribute("userName") == null || session.getAttribute("user") == null) {
             if (!"bookShoppingImg".equals(action) && !"bookShoppingTitle".equals(action)
                     && !"filter".equals(action) 
-                    && !"search".equals(action)&&"viewVoucher".equals(action)) {
+                    && !"search".equals(action)&&!"viewVoucher".equals(action)) {
                 // Check if the request is an AJAX request
                 String requestedWith = req.getHeader("X-Requested-With");
                 if ("XMLHttpRequest".equals(requestedWith)) {
