@@ -270,9 +270,6 @@ VALUES
 ('234 Maple St', 'Condo 12', 'Houston'),
 ('678 Birch St', 'Cabin 3', 'Seattle');
 
-select ai.AddressID,Street, BuildingNo, City
- FROM AddressInfo ai inner join UserAddress ua on ai.AddressID=ua.AddressID
- where ua.AddressStatus='A' and ua.UserID=1
 -- Insert data into UserAddress table
 INSERT INTO UserAddress ( UserID, AddressID, AddressStatus)
 VALUES ( 1, 5, 'A'),
@@ -281,14 +278,6 @@ VALUES ( 1, 5, 'A'),
 ( 2, 3, 'NA'),
 ( 3, 1, 'A'),
 ( 1, 2, 'NA');
-
--- Insert data into PaymentMethod table
-INSERT INTO PaymentMethod (PaymentMethodID, PaymentName)
-VALUES (1, 'Credit Card');
-
--- Insert data into Cards table
-INSERT INTO Cards (CardID, PaymentMethodID, UserID, ExpireDates)
-VALUES (1, 1, 1, '2025-12-31');
 
 -- Insert data into BookInfo table
 INSERT INTO BookInfo (Title, PublisherID, Price, Pages, AvaQuantity, PublishDate,ImageURL, Descriptions, LongDescriptions )
