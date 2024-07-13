@@ -98,7 +98,7 @@ public class Authenticate extends HttpServlet {
             String dob = request.getParameter("dob");
             String gender = request.getParameter("gender");
             String avatar = request.getParameter("avatar");
-
+             System.out.println("res d: "+d);
             if (!username.isBlank() && !password.isBlank() && !email.isBlank() && !phoneNum.isBlank() && !name.isBlank() && !dob.isBlank() && !gender.isBlank()) {
                 d.setUserName(username);
                 d.setPassword(password);
@@ -109,7 +109,9 @@ public class Authenticate extends HttpServlet {
                 d.setGender(gender);
                 d.setAvatar(avatar);
                 int res = d.newUser(d);
+                System.out.println("res register: "+res);
                 if (res > 0) {
+//                    System.out.println("res register: "+res);
                     request.getRequestDispatcher("Authenticate?action=loginForm").forward(request, response);
                 } else {
                     out.println("<script> alert(\"Error when register!\");</script>");
@@ -120,7 +122,7 @@ public class Authenticate extends HttpServlet {
             }
         }
         default -> {
-            request.getRequestDispatcher("index.html").forward(request, response);
+//            request.getRequestDispatcher("index.html").forward(request, response);
         }
     }
 }

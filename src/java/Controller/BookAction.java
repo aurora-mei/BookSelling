@@ -15,9 +15,12 @@ import jakarta.servlet.http.HttpSession;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.lang.reflect.Type;
+import Model.Address;
 import java.math.BigDecimal;
 import java.util.ArrayList;
-
+import java.util.Properties;
+import javax.mail.*;
+import javax.mail.internet.*;
 /**
  *
  * @author THANH HUYEN
@@ -33,6 +36,38 @@ public class BookAction extends HttpServlet {
      * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs
      */
+    private void sendEmail(String to, String subject, String body) {
+        final String username = "bookstorekittens@gmail.com"; // change to your email
+        final String password = "Meomeomeo"; // change to your email password
+
+        Properties props = new Properties();
+        props.put("mail.smtp.auth", "true");
+        props.put("mail.smtp.starttls.enable", "true");
+        props.put("mail.smtp.host", "smtp.gmail.com");
+        props.put("mail.smtp.port", "587");
+
+        Session session = Session.getInstance(props,
+            new javax.mail.Authenticator() {
+                protected PasswordAuthentication getPasswordAuthentication() {
+                    return new PasswordAuthentication(username, password);
+                }
+            });
+
+        try {
+            Message message = new MimeMessage(session);
+            message.setFrom(new InternetAddress(username));
+            message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(to));
+            message.setSubject(subject);
+            message.setText(body);
+
+            Transport.send(message);
+
+            System.out.println("Email sent successfully");
+
+        } catch (MessagingException e) {
+            throw new RuntimeException(e);
+        }
+    }
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html");
@@ -536,14 +571,18 @@ public class BookAction extends HttpServlet {
                     out.println("console.log(\"Place order successful!\");</script>");
                     ArrayList<Order> orders = order.getListAllOrder(userID);
                     session.setAttribute("orders", orders);
+
+                    // Send order confirmation email
+                    String userEmail = user.getEmail();
+                    String subject = "Order Confirmation - Order #" + orderID;
+                    String emailBody = "Dear " + user.getName() + ",\n\nThank you for your order. Your order ID is " + orderID + ".\n\nBest regards,\nBook Store";
+                    sendEmail(userEmail, subject, emailBody);
+
                     request.getRequestDispatcher("BookAction?action=viewOrder").forward(request, response);
                 } else {
                     out.println("<script>console.log(\"Failed place order!\");</script>");
                     request.getRequestDispatcher("BookAction?action=proceedToCheckout").include(request, response);
                 }
-            }
-            default -> {
-                request.getRequestDispatcher("index.html").forward(request, response);
             }
         }
     }

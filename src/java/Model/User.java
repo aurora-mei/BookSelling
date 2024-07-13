@@ -45,7 +45,18 @@ public class User implements Serializable, DatabaseInfo {
         this.gender = gender;
         this.avatar = avatar;
     }
+    public User( String userName, String password, String roles, String email, String phoneNum, String name, Date dob, String gender, String avatar) {
 
+        this.userName = userName;
+        this.password = password;
+        this.roles = roles;
+        this.email = email;
+        this.phoneNum = phoneNum;
+        this.name = name;
+        this.dob = dob;
+        this.gender = gender;
+        this.avatar = avatar;
+    }
     // Getters and setters
     public int getUserID() {
         return userID;
@@ -286,8 +297,8 @@ public class User implements Serializable, DatabaseInfo {
         // Đối tượng Date được tạo bằng cách sử dụng phương thức Date.valueOf("YYYY-MM-DD")
         // Giá trị thời gian là một ngày cụ thể
 
-       User s = new User();
-        System.out.println(s.getListAdressByUserID(1));
+       User s = new User("ad", "123", "", "huyen@gmail.com", "1234567890","thanh", Date.valueOf("2022-10-01"), "female", "de.jpg");
+        System.out.println(s.newUser(s));
     }
 
 }

@@ -23,7 +23,7 @@
                                             </div>
                                             <div class="progress">
                                                 <div class="progress-bar" style="width: 50%;"></div>
-                                                <span class="progress-label">Đã bán 30</span> == $0
+                                                <span class="progress-label">Sold 30</span> == $0
                                             </div>
                                             <div class="ratingbox">
                                                 <span class="fa fa-star checked"></span>
@@ -51,7 +51,7 @@
                                             </div>
                                             <div class="progress">
                                                 <div class="progress-bar" style="width: 25%;"></div>
-                                                <span class="progress-label">Đã bán 15</span> == $0
+                                                <span class="progress-label">Sold 15</span> == $0
                                             </div>
                                             <div class="ratingbox">
                                                 <span class="fa fa-star checked"></span>
@@ -79,7 +79,7 @@
                                             </div>
                                             <div class="progress">
                                                 <div class="progress-bar" style="width:75%;"></div>
-                                                <span class="progress-label">Đã bán 35</span> == $0
+                                                <span class="progress-label">Sold 35</span> == $0
                                             </div>
                                             <div class="ratingbox">
                                                 <span class="fa fa-star checked"></span>
@@ -107,7 +107,7 @@
                                             </div>
                                             <div class="progress">
                                                 <div class="progress-bar" style="width: 20%;"></div>
-                                                <span class="progress-label">Đã bán 10</span> == $0
+                                                <span class="progress-label">Sold 10</span> == $0
                                             </div>
                                             <div class="ratingbox">
                                                 <span class="fa fa-star checked"></span>
@@ -126,7 +126,7 @@
                             </div>
 
                             <div class="text-center mb-4">
-                                <h2 class="section-title px-5"><span class="px-2">Harry Potter Lists</span></h2>
+                                <h2 class="section-title px-5"><span class="px-2">Harry Potter Series</span></h2>
                             </div>
                             <div class="row px-xl-5 pb-3">
 
@@ -144,7 +144,7 @@
                                             </div>
                                             <div class="progress">
                                                 <div class="progress-bar" style="width: 80%;"></div>
-                                                <span class="progress-label">Đã bán 70</span> == $0
+                                                <span class="progress-label">Sold 70</span> == $0
                                             </div>
                                             <div class="ratingbox">
                                                 <span class="fa fa-star checked"></span>
@@ -173,7 +173,7 @@
                                             </div>
                                             <div class="progress">
                                                 <div class="progress-bar" style="width: 85%;"></div>
-                                                <span class="progress-label">Đã bán 80</span> == $0
+                                                <span class="progress-label">Sold 80</span> == $0
                                             </div>
                                             <div class="ratingbox">
                                                 <span class="fa fa-star checked"></span>
@@ -202,7 +202,7 @@
                                             </div>
                                             <div class="progress">
                                                 <div class="progress-bar" style="width: 50%;"></div>
-                                                <span class="progress-label">Đã bán 45</span> == $0
+                                                <span class="progress-label">Sold 45</span> == $0
                                             </div>
                                             <div class="ratingbox">
                                                 <span class="fa fa-star checked"></span>
@@ -231,7 +231,7 @@
                                             </div>
                                             <div class="progress">
                                                 <div class="progress-bar" style="width: 90%;"></div>
-                                                <span class="progress-label">Đã bán 85</span> == $0
+                                                <span class="progress-label">Sold 85</span> == $0
                                             </div>
                                             <div class="ratingbox">
                                                 <span class="fa fa-star checked"></span>
@@ -294,7 +294,7 @@
                                             </div>
                                             <div class="progress">
                                                 <div class="progress-bar" style="width: 50%;"></div>
-                                                <span class="progress-label">Đã bán 35</span> == $0
+                                                <span class="progress-label">Sold 35</span> == $0
                                             </div>
                                             <div class="ratingbox">
                                                 <span class="fa fa-star checked"></span>
@@ -322,7 +322,7 @@
                                             </div>
                                             <div class="progress">
                                                 <div class="progress-bar" style="width: 70%;"></div>
-                                                <span class="progress-label">Đã bán 50</span> == $0
+                                                <span class="progress-label">Sold 50</span> == $0
                                             </div>
                                             <div class="ratingbox">
                                                 <span class="fa fa-star checked"></span>
@@ -350,7 +350,7 @@
                                             </div>
                                             <div class="progress">
                                                 <div class="progress-bar" style="width: 25%;"></div>
-                                                <span class="progress-label">Đã bán 20</span> == $0
+                                                <span class="progress-label">Sold 20</span> == $0
                                             </div>
                                             <div class="ratingbox">
                                                 <span class="fa fa-star checked"></span>
@@ -378,7 +378,7 @@
                                             </div>
                                             <div class="progress">
                                                 <div class="progress-bar" style="width: 35%;"></div>
-                                                <span class="progress-label">Đã bán 15</span> == $0
+                                                <span class="progress-label">Sold 15</span> == $0
                                             </div>
                                             <div class="ratingbox">
                                                 <span class="fa fa-star checked"></span>
@@ -406,7 +406,7 @@
                                             </div>
                                             <div class="progress">
                                                 <div class="progress-bar" style="width: 90%;"></div>
-                                                <span class="progress-label">Đã bán 80</span> == $0
+                                                <span class="progress-label">Sold 80</span> == $0
                                             </div>
                                             <div class="ratingbox">
                                                 <span class="fa fa-star checked"></span>
@@ -434,7 +434,7 @@
                                             </div>
                                             <div class="progress">
                                                 <div class="progress-bar" style="width: 50%;"></div>
-                                                <span class="progress-label">Đã bán 50</span> == $0
+                                                <span class="progress-label">Sold 50</span> == $0
                                             </div>
                                             <div class="ratingbox">
                                                 <span class="fa fa-star checked"></span>
@@ -462,7 +462,7 @@
                                             </div>
                                             <div class="progress">
                                                 <div class="progress-bar" style="width: 80%;"></div>
-                                                <span class="progress-label">Đã bán 80</span> == $0
+                                                <span class="progress-label">Sold 80</span> == $0
                                             </div>
                                             <div class="ratingbox">
                                                 <span class="fa fa-star checked"></span>
@@ -490,7 +490,7 @@
                                             </div>
                                             <div class="progress">
                                                 <div class="progress-bar" style="width: 55%;"></div>
-                                                <span class="progress-label">Đã bán 55</span> == $0
+                                                <span class="progress-label">Sold 55</span> == $0
                                             </div>
                                             <div class="ratingbox">
                                                 <span class="fa fa-star checked"></span>

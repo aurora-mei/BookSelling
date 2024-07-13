@@ -12,7 +12,7 @@
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
         <meta charset="utf-8">
-        <title>Tiệm sách Kittens</title>
+        <title>Kittens Bookstore</title>
         <meta content="width=device-width, initial-scale=1.0" name="viewport">
 
         <!-- Favicon -->
@@ -59,7 +59,7 @@
             <div class="row align-items-center py-3 px-xl-5">
                 <div class="col-lg-3 d-none d-lg-block">
                     <a href="" class="text-decoration-none">
-                        <h1 class="m-0 display-5 font-weight-semi-bold"><span class="text-primary font-weight-bold border px-3 mr-1">Kittens</span>Bookstore</h1>
+                        <h1 class="m-0 display-5 font-weight-semi-bold"><span class="text-primary font-weight-bold border px-3 mr-1">Kittens </span>Bookstore</h1>
                     </a>
                 </div>
                 <div class="col-lg-6 col-6 text-left">

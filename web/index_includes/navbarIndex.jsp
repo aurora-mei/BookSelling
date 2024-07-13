@@ -92,7 +92,7 @@
 
                 <div class="widget widget_banner banner-effect">
                     <a href="BookAction?action=bookShoppingImg&imgURL=images/sale1.jpg">
-                        <div class="widget_text">Sách nổi bật</div>
+                        <div class="widget_text">Featured books</div>
 
                         <img src="images/sale1.jpg" alt="Tuổi Trẻ Đáng Giá bao nhiêu">
 
@@ -109,7 +109,7 @@
 
                 <div class="widget widget_collection d-none d-md-block">
                     <div class="widget-title">
-                        Sách Bán Chạy
+                        Bestselling Books
                     </div>
                     <div class="widget_collection_list">
 

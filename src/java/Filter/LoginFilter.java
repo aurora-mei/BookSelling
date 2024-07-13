@@ -50,7 +50,6 @@ public class LoginFilter implements Filter {
             if (!"bookShoppingImg".equals(action) && !"bookShoppingTitle".equals(action)
                     && !"filter".equals(action) 
                     && !"search".equals(action)&&!"viewVoucher".equals(action)) {
-                // Check if the request is an AJAX request
                 String requestedWith = req.getHeader("X-Requested-With");
                 if ("XMLHttpRequest".equals(requestedWith)) {
                     res.setHeader("REDIRECT", "REDIRECT");
@@ -62,7 +61,6 @@ public class LoginFilter implements Filter {
                 return;
             }
         }
-
         chain.doFilter(request, response);
     }
 

@@ -44,7 +44,8 @@
             </c:when>  
             <c:when test="${fn:contains(nameJSP,'registerForm')}">  
                 <form action="Authenticate" method="get" class="new">
-                    <c:set var="action" value="register" scope="session"/>                  
+                    <input type="hidden" id="action" name="action" value='register'>
+                    <%--<c:set var="action" value="register" scope="session"/>--%>                  
                     User name: <input type="text" name="username" required> <br>
                     Password: <input type="password" name="password" required> <br>
                     <!--Roles: <input type="text" name="roles" required> <br>-->

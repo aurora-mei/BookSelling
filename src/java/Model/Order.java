@@ -380,6 +380,31 @@ public class Order implements Serializable, DatabaseInfo {
         }
         return 0;
     }
+        
+        public double getRevenueByDate(String date) throws SQLException {
+        double revenue = 0;
+        Connection conn = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+
+        try {
+            conn = Order.getConnect(); // Giả sử bạn có lớp Database để lấy kết nối
+            String query = "SELECT SUM(total_price) AS revenue FROM orders WHERE order_date = ?";
+            ps = conn.prepareStatement(query);
+            ps.setString(1, date);
+            rs = ps.executeQuery();
+
+            if (rs.next()) {
+                revenue = rs.getDouble("revenue");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            conn.close(); // Đảm bảo đóng kết nối, statement và result set
+        }
+        
+        return revenue;
+    }
 
     public static void main(String[] args) {
         Order instance = new Order();
