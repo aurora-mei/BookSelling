@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import java.util.Properties;
 import javax.mail.*;
 import javax.mail.internet.*;
+
 /**
  *
  * @author THANH HUYEN
@@ -35,8 +36,8 @@ public class BookAction extends HttpServlet {
      * @param response servlet response
      * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs
-*/
-private void sendEmail(String to, String subject, String body) {
+     */
+    private void sendEmail(String to, String subject, String body) {
         final String username = "kthkun@gmail.com"; // change to your email
         final String password = "jogh hfjt skfg vuan"; // change to your email password
 
@@ -47,11 +48,11 @@ private void sendEmail(String to, String subject, String body) {
         props.put("mail.smtp.port", "587");
 
         Session session = Session.getInstance(props,
-            new javax.mail.Authenticator() {
-                protected PasswordAuthentication getPasswordAuthentication() {
-                    return new PasswordAuthentication(username, password);
-                }
-            });
+                new javax.mail.Authenticator() {
+            protected PasswordAuthentication getPasswordAuthentication() {
+                return new PasswordAuthentication(username, password);
+            }
+        });
 
         try {
             Message message = new MimeMessage(session);
@@ -68,6 +69,7 @@ private void sendEmail(String to, String subject, String body) {
             throw new RuntimeException(e);
         }
     }
+
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html");
@@ -113,10 +115,10 @@ private void sendEmail(String to, String subject, String body) {
                 //lấy các sách cùng thể loại
                 ArrayList<Book> booksSameCate = new ArrayList<>();
                 if (c != null) {
-                     booksSameCate= b.getListBookByCategoryName(c.getCategoryName());
-                     request.setAttribute("category", c);
+                    booksSameCate = b.getListBookByCategoryName(c.getCategoryName());
+                    request.setAttribute("category", c);
                 } else {
-                    booksSameCate= b.getListBookByCategoryName("Manga");
+                    booksSameCate = b.getListBookByCategoryName("Manga");
                 }
                 HttpSession session = request.getSession();
                 session.setAttribute("lastTitle", b.getTitle());
@@ -145,9 +147,9 @@ private void sendEmail(String to, String subject, String body) {
                 }
 //                //lấy NXB sách
                 Publisher p = b.getPublisherByBookID(b.getBookID());
-                System.out.println("Publisher: "+p);
+                System.out.println("Publisher: " + p);
                 Category c = b.getCategoryByBookID(b.getBookID());
-                 System.out.println("Category: "+c);
+                System.out.println("Category: " + c);
 //                //lấy ngôn ngữ sách
                 ArrayList<Language> langList = b.getListLanguagesBook(b.getBookID());
                 for (Language a : langList) {
@@ -155,7 +157,7 @@ private void sendEmail(String to, String subject, String body) {
                 }
 //                //lấy ảnh sách
                 ArrayList<String> imgList = b.getListImagesBook(b.getBookID());
-                 for (String a : imgList) {
+                for (String a : imgList) {
                     System.out.println(a);
                 }
                 //lấy tác giả sách
@@ -175,10 +177,10 @@ private void sendEmail(String to, String subject, String body) {
 //                //lấy các sách cùng thể loại
                 ArrayList<Book> booksSameCate = new ArrayList<>();
                 if (c != null) {
-                     booksSameCate= b.getListBookByCategoryName(c.getCategoryName());
-                     request.setAttribute("category", c);
+                    booksSameCate = b.getListBookByCategoryName(c.getCategoryName());
+                    request.setAttribute("category", c);
                 } else {
-                    booksSameCate= b.getListBookByCategoryName("Manga");
+                    booksSameCate = b.getListBookByCategoryName("Manga");
                 }
                 HttpSession session = request.getSession();
                 session.setAttribute("lastTitle", b.getTitle());
@@ -187,7 +189,7 @@ private void sendEmail(String to, String subject, String body) {
                 request.setAttribute("booksSameCate", booksSameCate);
                 request.setAttribute("book", b);
                 request.setAttribute("publisher", p);
-                
+
                 request.setAttribute("langList", langList);
                 request.setAttribute("imgList", imgList);
                 request.setAttribute("uReviewed", uReviewed);
@@ -208,7 +210,7 @@ private void sendEmail(String to, String subject, String body) {
                             System.out.println(s);
                         }
                         HttpSession session = request.getSession();
-                        session.setAttribute("bookList", bookList);
+                        session.setAttribute("bookListToSort", bookList);
                         request.setAttribute("bookList", bookList);
                         request.getRequestDispatcher("shop.jsp").forward(request, response);
                     }
@@ -222,7 +224,7 @@ private void sendEmail(String to, String subject, String body) {
                             System.out.println(s);
                         }
                         HttpSession session = request.getSession();
-                        session.setAttribute("bookList", bookList);
+                        session.setAttribute("bookListToSort", bookList);
                         request.setAttribute("bookList", bookList);
                         request.getRequestDispatcher("shop.jsp").forward(request, response);
                     }
@@ -240,7 +242,7 @@ private void sendEmail(String to, String subject, String body) {
                             System.out.println(s);
                         }
                         HttpSession session = request.getSession();
-                        session.setAttribute("bookList", bookList);
+                        session.setAttribute("bookListToSort", bookList);
                         request.setAttribute("bookList", bookList);
                         request.getRequestDispatcher("shop.jsp").forward(request, response);
                     }
@@ -258,7 +260,7 @@ private void sendEmail(String to, String subject, String body) {
                             System.out.println(s);
                         }
                         HttpSession session = request.getSession();
-                        session.setAttribute("bookList", bookList);
+                        session.setAttribute("bookListToSort", bookList);
                         request.setAttribute("bookList", bookList);
                         request.getRequestDispatcher("shop.jsp").forward(request, response);
                     }
@@ -272,7 +274,7 @@ private void sendEmail(String to, String subject, String body) {
                             System.out.println(s);
                         }
                         HttpSession session = request.getSession();
-                        session.setAttribute("bookList", bookList);
+                        session.setAttribute("bookListToSort", bookList);
                         request.setAttribute("bookList", bookList);
                         request.getRequestDispatcher("shop.jsp").forward(request, response);
                     }
@@ -286,20 +288,20 @@ private void sendEmail(String to, String subject, String body) {
                             System.out.println(s);
                         }
                         HttpSession session = request.getSession();
-                        session.setAttribute("bookList", bookList);
+                        session.setAttribute("bookListToSort", bookList);
                         request.setAttribute("bookList", bookList);
                         request.getRequestDispatcher("shop.jsp").forward(request, response);
                     }
                     case "none" -> {
                         Book b = new Book();
                         ArrayList<Book> bookList = new ArrayList<>();
-                        bookList = b.getListBookByAllAuthor();
+                        bookList = b.getListBook();
                         System.out.println("List book of all");
                         for (Book s : bookList) {
                             System.out.println(s);
                         }
                         HttpSession session = request.getSession();
-                        session.setAttribute("bookList", bookList);
+                        session.setAttribute("bookListToSort", bookList);
                         request.setAttribute("bookList", bookList);
                         request.getRequestDispatcher("shop.jsp").forward(request, response);
                     }
@@ -316,6 +318,8 @@ private void sendEmail(String to, String subject, String body) {
                         for (Book s : resSearch) {
                             System.out.println(s);
                         }
+                        HttpSession session = request.getSession(false);
+                        session.setAttribute("bookListToSort", resSearch);
                         request.setAttribute("bookList", resSearch);
                         out.println("<script>$('input[placeholder=\"Search books by title,year publish,description\"]').val(" + keyword + ")</script>");
                         request.getRequestDispatcher("shop.jsp").include(request, response);
@@ -329,14 +333,22 @@ private void sendEmail(String to, String subject, String body) {
                 String type = (String) request.getParameter("type");
                 HttpSession session = request.getSession();
 //                ArrayList<Book> sortedBookList = (ArrayList<Book>) request.getAttribute("bookList");
-                ArrayList<Book> sortedBookList = (ArrayList<Book>) session.getAttribute("bookList");
-                  if (sortedBookList == null || sortedBookList.isEmpty()) {
-                    out.println("<script> alert(\"No books found to sort!\");</script>");
+                ArrayList<Book> sortedBookList = (ArrayList<Book>) session.getAttribute("bookListToSort");
+                if (sortedBookList == null || sortedBookList.isEmpty()) {
+                    ArrayList<Book> bookList = new ArrayList<>();
+                    bookList = b.getListBook();
+                    System.out.println("List book of all");
+                    for (Book s : bookList) {
+                        System.out.println(s);
+                    }
+                    session.setAttribute("bookListToSort", bookList);
+                    request.setAttribute("bookList", bookList);
+                     out.println("<script> alert(\"No books found to sort!\");</script>");
                     request.getRequestDispatcher("shop.jsp").include(request, response);
                     return;
                 }
                 switch (type) {
-                    case "latest" -> {                       
+                    case "latest" -> {
                         sortedBookList = b.sortLatest(sortedBookList);
                         System.out.println("List books of latest");
                         for (Book s : sortedBookList) {
@@ -344,10 +356,18 @@ private void sendEmail(String to, String subject, String body) {
                         }
                         request.setAttribute("bookList", sortedBookList);
                         request.getRequestDispatcher("shop.jsp").forward(request, response);
-                    } case "popularity" -> {
+                    }
+                    case "popularity" -> {
 //                        System.out.println("searched list: "+ sortedBookList);
-                        sortedBookList = b.sortByPopularity(b.getListBook());
-                        System.out.println("after sorted list: "+ sortedBookList);
+                        sortedBookList = b.sortByPopularity(sortedBookList);
+                        System.out.println("popularity sorted list: " + sortedBookList);
+                        request.setAttribute("bookList", sortedBookList);
+                        request.getRequestDispatcher("shop.jsp").forward(request, response);
+                    }
+                    case "bestRating" -> {
+//                        System.out.println("searched list: "+ sortedBookList);
+                        sortedBookList = b.sortBestrating(sortedBookList);
+                        System.out.println("best rating sorted list: " + sortedBookList);
                         request.setAttribute("bookList", sortedBookList);
                         request.getRequestDispatcher("shop.jsp").forward(request, response);
                     }

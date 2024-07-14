@@ -153,7 +153,7 @@
 
                                 <a style='cursor: pointer;' class="dropdown-item" onclick="sortBooks('latest')">Latest</a>
                                 <a style='cursor: pointer;' class="dropdown-item" onclick="sortBooks('popularity')">Popularity</a>
-                                <a style='cursor: pointer;' class="dropdown-item" href="#">Best Rating</a>
+                                <a style='cursor: pointer;' class="dropdown-item" onclick="sortBooks('bestRating')">Best Rating</a>
                             </div>
                         </div>
                     </div>

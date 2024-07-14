@@ -180,18 +180,15 @@ public class Book implements Serializable, DatabaseInfo {
     }
 //==================sort list book
 
+    public ArrayList<Book> sortLatest(ArrayList<Book> bList) {
+        LocalDate sixtyDaysAgo = LocalDate.now().minusDays(60);
+        ArrayList<Book> filteredBooks = bList.stream()
+                .filter(b -> b.getPublishDate().toLocalDate().isAfter(sixtyDaysAgo))
+                .collect(Collectors.toCollection(ArrayList::new));
+        return filteredBooks;
+    }
 
-
-public ArrayList<Book> sortLatest(ArrayList<Book> bList){
-    LocalDate sixtyDaysAgo = LocalDate.now().minusDays(60);
-    ArrayList<Book> filteredBooks = bList.stream()
-        .filter(b -> b.getPublishDate().toLocalDate().isAfter(sixtyDaysAgo))
-        .collect(Collectors.toCollection(ArrayList::new));
-    return filteredBooks;
-}
-    
 //============get List Book 
-
     public ArrayList<Book> searchByKeyWord(String key) {
         ArrayList<Book> list = new ArrayList<>();
         try (Connection con = getConnect()) {
@@ -422,7 +419,8 @@ public ArrayList<Book> sortLatest(ArrayList<Book> bList){
         }
         return null;
     }
-      public ArrayList<Book> getListBook() {
+
+    public ArrayList<Book> getListBook() {
         ArrayList<Book> list = new ArrayList<>();
         try (Connection con = getConnect()) {
             PreparedStatement stmt = con.prepareStatement("""
@@ -601,6 +599,7 @@ public ArrayList<Book> sortLatest(ArrayList<Book> bList){
         }
         return null;
     }
+
     public boolean addBook(Book book) {
         try (Connection con = getConnect()) {
             String query = "INSERT INTO BookInfo (publisherID, title, price, priceDiscount, pages, avaQuantity, publishDate, descriptions, longDescriptions, imageURL) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
@@ -681,10 +680,49 @@ public ArrayList<Book> sortLatest(ArrayList<Book> bList){
         }
         return revenue;
     }
-    
-    public ArrayList<Book> sortByPopularity( ArrayList<Book> books) {
+
+    public ArrayList<Book> sortByPopularity(ArrayList<Book> books) {
         ArrayList<Book> list = new ArrayList<>();
-         ArrayList<Book> finalList = new ArrayList<>();
+        ArrayList<Book> finalList = new ArrayList<>();
+        try (Connection con = getConnect()) {
+            String query = """
+                      select bi.BookID, bi.publisherID, bi.title, bi.price,bi.priceDiscount, bi.pages, bi.avaQuantity,
+                                              bi.publishDate, bi.descriptions, bi.longDescriptions, bi.imageURL
+                                              from BookInfo bi
+                                                JOIN (
+                                                      SELECT BookID, SUM(Quantity) AS TotalQuantity
+                                                      FROM OrderItem
+                                                      GROUP BY BookID
+                                                      HAVING SUM(Quantity) > 4
+                                                  ) r ON bi.BookID = r.BookID;  
+                       """;
+            PreparedStatement stmt = con.prepareStatement(query);
+
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                list.add(new Book(rs.getInt(1), rs.getInt(2), rs.getString(3),
+                        rs.getBigDecimal(4), rs.getBigDecimal(5), rs.getInt(6), rs.getInt(7), rs.getDate(8), rs.getString(9),
+                        rs.getString(10), rs.getString(11)));
+            }
+            con.close();
+
+            for (Book book : books) {
+                for (Book bestRating : list) {
+                    if (bestRating.getBookID() == book.getBookID()) {
+                        finalList.add(book);
+                    }
+                }
+            }
+            return finalList;
+        } catch (Exception ex) {
+            Logger.getLogger(Book.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
+    }
+
+    public ArrayList<Book> sortBestrating(ArrayList<Book> books) {
+        ArrayList<Book> list = new ArrayList<>();
+        ArrayList<Book> finalList = new ArrayList<>();
         try (Connection con = getConnect()) {
             String query = """
                        select bi.BookID, bi.publisherID, bi.title, bi.price,bi.priceDiscount, bi.pages, bi.avaQuantity,
@@ -698,18 +736,19 @@ public ArrayList<Book> sortLatest(ArrayList<Book> bList){
                            ) r ON bi.BookID = r.BookID;  
                        """;
             PreparedStatement stmt = con.prepareStatement(query);
-           
+
             ResultSet rs = stmt.executeQuery();
             while (rs.next()) {
                 list.add(new Book(rs.getInt(1), rs.getInt(2), rs.getString(3),
-                        rs.getBigDecimal(4), rs.getBigDecimal(5), rs.getInt(6),rs.getInt(7), rs.getDate(8), rs.getString(9),
+                        rs.getBigDecimal(4), rs.getBigDecimal(5), rs.getInt(6),
+                        rs.getInt(7), rs.getDate(8), rs.getString(9),
                         rs.getString(10), rs.getString(11)));
             }
             con.close();
-            
-            for( Book book: books){
-                for(Book bestRating : list){
-                    if(bestRating.getBookID()==book.getBookID()){
+
+            for (Book book : books) {
+                for (Book bestRating : list) {
+                    if (bestRating.getBookID() == book.getBookID()) {
                         finalList.add(book);
                         break;
                     }
@@ -724,6 +763,10 @@ public ArrayList<Book> sortLatest(ArrayList<Book> bList){
 
     public static void main(String[] args) {
         Book a = new Book();
-        System.out.println(a.sortByPopularity(a.getListBook()));
+//        System.out.println(a.getListBook());
+        ArrayList<Book> bl = a.sortByPopularity(a.getListBook());
+        for (Book b : bl) {
+            System.out.println(b);
+        }
     }
 }
