@@ -72,7 +72,7 @@ public class Authenticate extends HttpServlet {
                     if ("admin".equals(s.getRoles())) {
                         response.sendRedirect("admin.jsp");
                     } else {
-                        response.sendRedirect("shop.jsp");
+                        response.sendRedirect("index.jsp");
                     }
                 } else {
                     out.println("<script> alert(\"User name or password is invalid!\");</script>");
@@ -84,7 +84,7 @@ public class Authenticate extends HttpServlet {
                 if (session != null && session.getAttribute("userName") != null) {//nếu đã đăng nhập được
                     session.invalidate();
                     out.println("<script> alert(\"Logout successful!\");</script>");
-                    request.getRequestDispatcher("index.html").include(request, response);
+                    request.getRequestDispatcher("index.jsp").include(request, response);
                 } else {
                     request.getRequestDispatcher("Authenticate?action=none").forward(request, response);
                 }
