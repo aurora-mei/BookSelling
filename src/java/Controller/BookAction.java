@@ -19,6 +19,8 @@ import Model.Address;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Properties;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.mail.*;
 import javax.mail.internet.*;
 
@@ -37,7 +39,7 @@ public class BookAction extends HttpServlet {
      * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs
      */
-    private int sendEmail(String to, String subject, String body) {
+    private int sendEmail(String to, String subject, String body) throws MessagingException {
         final String username = "bookstorekittens@gmail.com"; // change to your email
         final String password = "ppai xicq grne jmep"; // change to your email password
 
@@ -49,7 +51,7 @@ public class BookAction extends HttpServlet {
 
         Session session = Session.getInstance(props,
                 new javax.mail.Authenticator() {
-            protected PasswordAuthentication getPasswordAuthentication() {
+            public PasswordAuthentication getPasswordAuthentication() {
                 return new PasswordAuthentication(username, password);
             }
         });
@@ -66,10 +68,10 @@ public class BookAction extends HttpServlet {
             System.out.println("Email sent successfully");
             return 1;
         } catch (MessagingException e) {
-//            return -1;
-            throw new RuntimeException(e);
-        }
+            System.out.println(e);
+                throw new MessagingException();
 
+        }
     }
 
     public void cancelOrder(HttpServletRequest request, HttpServletResponse response) throws IOException {
@@ -87,7 +89,7 @@ public class BookAction extends HttpServlet {
     }
 
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
+            throws ServletException, IOException, MessagingException {
         response.setContentType("text/html");
         PrintWriter out = response.getWriter();
 
@@ -246,14 +248,14 @@ public class BookAction extends HttpServlet {
                     }
                     case "author" -> {
                         ArrayList<Book> bookList = new ArrayList<>();
-                        String name = (String) request.getParameter("name");
+                        String nameAuthor = (String) request.getParameter("nameAuthor");
                         Book b = new Book();
-                        if (name.equals("all")) {
+                        if (nameAuthor.equals("all")) {
                             bookList = b.getListBook();
                         } else {
-                            bookList = b.getListBookByAuthorName(name);
+                            bookList = b.getListBookByAuthorName(nameAuthor);
                         }
-                        System.out.println("List book of " + name);
+                        System.out.println("List book of " + nameAuthor);
                         for (Book s : bookList) {
                             System.out.println(s);
                         }
@@ -334,10 +336,25 @@ public class BookAction extends HttpServlet {
                         for (Book s : resSearch) {
                             System.out.println(s);
                         }
-                        HttpSession session = request.getSession(false);
+                        HttpSession session = request.getSession(true);
                         session.setAttribute("bookListToSort", resSearch);
+                         request.setAttribute("keyw", keyword);
                         request.setAttribute("bookList", resSearch);
                         out.println("<script>$('input[placeholder=\"Search books by title,year publish,description\"]').val(" + keyword + ")</script>");
+                        request.getRequestDispatcher("shop.jsp").include(request, response);
+                    }
+                    case "name" -> {
+                        Book b = new Book();
+                        String name = (String) request.getParameter("name");
+                        ArrayList<Book> resSearch = b.searchByName(name);
+                        System.out.println("List books of name " + name);
+                        for (Book s : resSearch) {
+                            System.out.println(s);
+                        }
+                        request.setAttribute("name", name);
+//                        session.setAttribute("bookListToSort", resSearch);
+                        request.setAttribute("bookList", resSearch);
+                        out.println("<script>$('input[placeholder=\"Search by name\"]').val(" + name + ")</script>");
                         request.getRequestDispatcher("shop.jsp").include(request, response);
                     }
                 }
@@ -610,19 +627,21 @@ public class BookAction extends HttpServlet {
                 int orderID = order.getOrderID();
                 int res = order.placeOrder(orderID, shippingID, addressID, cardID);
                 if (res > 0) {
-                    out.println(" <script>console.log(\"shippingID: " + shippingID + "\");");
-                    out.println("console.log(\"addressID: " + addressID + "\");");
-                    out.println("console.log(\"cardID: " + cardID + "\");");
-                    out.println("console.log(\"Place order successful!\");</script>");
+//                    out.println(" <script>console.log(\"shippingID: " + shippingID + "\");");
+//                    out.println("console.log(\"addressID: " + addressID + "\");");
+//                    out.println("console.log(\"cardID: " + cardID + "\");");
+//                    out.println("console.log(\"Place order successful!\");</script>");
                     ArrayList<Order> orders = order.getListAllOrder(userID);
                     session.setAttribute("orders", orders);
                     System.out.println("orders: " + orders);
-//                    // Send order confirmation email
-//                    String userEmail = user.getEmail();
-//                    String subject = "Order Confirmation - Order #" + orderID;
-//                    String emailBody = "Dear " + user.getName() + ",\n\nThank you for your order. Your order ID is " + orderID + ".\n\nBest regards,\nBook Store";
-//                    int e = sendEmail(userEmail, subject, emailBody);
-//                    System.out.println("e send email: "+e);
+                    
+                    // Send order confirmation email
+                    String userEmail = user.getEmail();
+                    String subject = "Order Confirmation - Order #" + orderID;
+                    String emailBody = "Dear " + user.getName() + ",\n\nThank you for your order. Your order ID is " + orderID + ".\n\nBest regards,\nBook Store";
+                    int e = sendEmail(userEmail, subject, emailBody);
+                    System.out.println("e send email: "+e);
+                    
                     request.getRequestDispatcher("BookAction?action=viewOrder").forward(request, response);
                 } else {
                     out.println("<script>console.log(\"Failed place order!\");</script>");
@@ -644,7 +663,11 @@ public class BookAction extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        try {
+            processRequest(request, response);
+        } catch (MessagingException ex) {
+            Logger.getLogger(BookAction.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     /**
@@ -658,7 +681,11 @@ public class BookAction extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        try {
+            processRequest(request, response);
+        } catch (MessagingException ex) {
+            Logger.getLogger(BookAction.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     /**

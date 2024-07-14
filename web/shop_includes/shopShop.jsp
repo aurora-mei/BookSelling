@@ -8,6 +8,8 @@
 <%@ page import="java.math.BigDecimal, Model.*" %>
 <%@page import="com.google.gson.Gson"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>  
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>  
+
 <jsp:useBean id="bookList" class="java.util.ArrayList" scope="request"/>
 <jsp:useBean id="bo" class="Model.Book" scope="request"/>
 <!-- Shop Start -->
@@ -19,7 +21,9 @@
             <div class="border-bottom mb-4 pb-4">
                 <h5 class="font-weight-semi-bold mb-4">Tác Giả</h5>
                 <form>
-                    <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">                       
+                    <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
+
+
                         <a href=""><input type="checkbox" class="custom-control-input" id="authors-0">
                             <label class="custom-control-label" for="authors-0">Tất Cả</label></a>
                     </div>
@@ -134,10 +138,17 @@
             <div class="row pb-3">
                 <div class="col-12 pb-1">
                     <div class="d-flex align-items-center justify-content-between mb-4">
-                        <form action="">
+                        <form onsubmit="event.preventDefault(); searchByName();">
                             <div class="input-group">
-                                <input type="text" class="form-control" placeholder="Search by name">
-                                <div class="input-group-append">
+                                <c:choose>
+                                    <c:when test="${name != null}">
+                                        <input type="text" class="form-control" placeholder="Search by name" value="${name}">
+                                    </c:when>
+                                    <c:otherwise>
+                                        <input type="text" class="form-control" placeholder="Search by name">
+                                    </c:otherwise>
+                                </c:choose>
+                                <div onclick="searchByName()" class="input-group-append" style="cursor: pointer;">                           
                                     <span class="input-group-text bg-transparent text-primary">
                                         <i class="fa fa-search"></i>
                                     </span>
@@ -215,16 +226,6 @@ String currentYear = "" + Calendar.getInstance().get(Calendar.YEAR);
 %>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script>
-
-                                    function sortBooks(type) {
-                                        // Create a hidden form
-                                        var form = $('<form></form>').attr('action', 'BookAction').attr('method', 'get');
-                                        form.append($('<input>').attr('type', 'hidden').attr('name', 'action').attr('value', 'sort'));
-                                        form.append($('<input>').attr('type', 'hidden').attr('name', 'type').attr('value', type));
-                                        // Append the form to the body and submit it
-                                        $('body').append(form);
-                                        form.submit();
-                                    }
                                     $(document).ready(function () {
                                         var years = [
                                             {id: 0, minY: "2005", maxY: "2010"},
@@ -237,31 +238,42 @@ String currentYear = "" + Calendar.getInstance().get(Calendar.YEAR);
 
                                         years.forEach(function (year) {
                                             var checkbox = "#years-" + year.id;
-                                            //            if (localStorage.getItem('checkbox_state_' + year.id) === 'true') {
-                                            //                $(checkbox).prop('checked', true);
-                                            //            }
+                                            // Retrieve and apply the stored state
+                                            if (localStorage.getItem('checkbox_state_' + year.id) === 'true') {
+                                                $(checkbox).prop('checked', true);
+                                            }
                                             $(checkbox).click(function () {
                                                 localStorage.setItem('checkbox_state_' + year.id, $(checkbox).is(':checked'));
-                                                window.location.href = "BookAction?action=filter&by=year&minY=" + year.minY + "&maxY=" + year.maxY;
+                                                if ($(checkbox).is(':checked')) {
+                                                    window.location.href = "BookAction?action=filter&by=year&minY=" + year.minY + "&maxY=" + year.maxY;
+                                                } else {
+                                                    window.location.href = "BookAction?action=filter&by=none";
+                                                }
                                             });
                                         });
 
                                         var authors = [
-                                            {id: 0, name: "all"},
-                                            {id: 1, name: "Nguyễn Nhật Ánh"},
-                                            {id: 2, name: "Karuho Shiina"},
-                                            {id: 3, name: "Clamp"},
-                                            {id: 4, name: "Antoine de Saint-Exupéry"},
-                                            {id: 5, name: "Susan David"}
+                                            {id: 0, nameAuthor: "all"},
+                                            {id: 1, nameAuthor: "Nguyễn Nhật Ánh"},
+                                            {id: 2, nameAuthor: "Karuho Shiina"},
+                                            {id: 3, nameAuthor: "Clamp"},
+                                            {id: 4, nameAuthor: "Antoine de Saint-Exupéry"},
+                                            {id: 5, nameAuthor: "Susan David"}
                                         ];
+
                                         authors.forEach(function (author) {
                                             var checkbox = "#authors-" + author.id;
-                                            //            if (localStorage.getItem('checkbox_state_' + author.id) === 'true') {
-                                            //                $(checkbox).prop('checked', true);
-                                            //            }
+                                            // Retrieve and apply the stored state
+                                            if (localStorage.getItem('checkbox_state_' + author.id) === 'true') {
+                                                $(checkbox).prop('checked', true);
+                                            }
                                             $(checkbox).click(function () {
                                                 localStorage.setItem('checkbox_state_' + author.id, $(checkbox).is(':checked'));
-                                                window.location.href = "BookAction?action=filter&by=author&name=" + author.name;
+                                                if ($(checkbox).is(':checked')) {
+                                                    window.location.href = "BookAction?action=filter&by=author&nameAuthor=" + author.nameAuthor;
+                                                } else {
+                                                    window.location.href = "BookAction?action=filter&by=none";
+                                                }
                                             });
                                         });
 
@@ -273,19 +285,24 @@ String currentYear = "" + Calendar.getInstance().get(Calendar.YEAR);
                                             {id: 4, name: "Comic Book"},
                                             {id: 5, name: "Cách Mạng-Chính Trị"}
                                         ];
+
                                         cates.forEach(function (cate) {
                                             var checkbox = "#cates-" + cate.id;
-                                            //            if (localStorage.getItem('checkbox_state_' + cate.id) === 'true') {
-                                            //                $(checkbox).prop('checked', true);
-                                            //            }
+                                            // Retrieve and apply the stored state
+                                            if (localStorage.getItem('checkbox_state_' + cate.id) === 'true') {
+                                                $(checkbox).prop('checked', true);
+                                            }
                                             $(checkbox).click(function () {
                                                 localStorage.setItem('checkbox_state_' + cate.id, $(checkbox).is(':checked'));
-                                                window.location.href = "BookAction?action=filter&by=category&cate=" + cate.name;
+                                                if ($(checkbox).is(':checked')) {
+                                                    window.location.href = "BookAction?action=filter&by=category&cate=" + cate.name;
+                                                } else {
+                                                    window.location.href = "BookAction?action=filter&by=none";
+                                                }
                                             });
                                         });
-
-
                                     });
 </script>
+
 <!-- Shop End -->
 

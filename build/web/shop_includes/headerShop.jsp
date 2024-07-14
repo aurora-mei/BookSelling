@@ -75,7 +75,14 @@
                 <div class="col-lg-6 col-6 text-left">
                     <form onsubmit="event.preventDefault(); searchByKeyWord();">
                         <div class="input-group">
-                            <input type="text" class="form-control" placeholder="Search books by title,year publish,description">
+                            <c:choose>
+                                <c:when test="${keyw != null}">
+                                    <input type="text" class="form-control" placeholder="Search books by title,year publish,description" value="${keyw}">
+                                </c:when>
+                                <c:otherwise>
+                                    <input type="text" class="form-control" placeholder="Search books by title,year publish,description">
+                                </c:otherwise>
+                            </c:choose>
                             <div onclick="searchByKeyWord()" class="input-group-append" style="cursor: pointer;">
                                 <span class="input-group-text bg-transparent text-primary">
                                     <i class="fa fa-search"></i>
@@ -182,21 +189,21 @@
             </div>
         </div>
         <!-- Page Header End -->
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-<script>
-    function searchByKeyWord() {
-                            var keyword = $('input[placeholder="Search books by title,year publish,description"]').val();
-                            console.log("key word " + keyword);                    
-                            if (keyword.length === 0) {
-                               return;
-                            }
-                            var form = $('<form></form>').attr('action', 'BookAction').attr('method', 'get');
-                                form.append($('<input>').attr('type', 'hidden').attr('name', 'action').attr('value', 'search'));
-                                form.append($('<input>').attr('type', 'hidden').attr('name', 'by').attr('value', 'key'));
-                                form.append($('<input>').attr('type', 'hidden').attr('name', 'keyword').attr('value', keyword));
-                                // Append the form to the body and submit it
-                                $('body').append(form);
-                                form.submit();
-                        }
-    
-</script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+        <script>
+                                        function searchByKeyWord() {
+                                            var keyword = $('input[placeholder="Search books by title,year publish,description"]').val();
+                                            console.log("key word " + keyword);
+                                            if (keyword.length === 0) {
+                                                return;
+                                            }
+                                            var form = $('<form></form>').attr('action', 'BookAction').attr('method', 'get');
+                                            form.append($('<input>').attr('type', 'hidden').attr('name', 'action').attr('value', 'search'));
+                                            form.append($('<input>').attr('type', 'hidden').attr('name', 'by').attr('value', 'key'));
+                                            form.append($('<input>').attr('type', 'hidden').attr('name', 'keyword').attr('value', keyword));
+                                            // Append the form to the body and submit it
+                                            $('body').append(form);
+                                            form.submit();
+                                        }
+
+        </script>
