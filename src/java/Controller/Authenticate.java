@@ -61,7 +61,7 @@ public class Authenticate extends HttpServlet {
                 }
                 if (s != null && s.getPassword().equals(pwd)) {
                     HttpSession newSession = request.getSession(true);
-                    newSession.setMaxInactiveInterval(60 * 60);
+                    newSession.setMaxInactiveInterval(600 * 60);
                     newSession.setAttribute("user", s);
                     newSession.setAttribute("userName", s.getUserName());
                     newSession.setAttribute("userID", s.getUserID());

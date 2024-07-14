@@ -37,9 +37,9 @@ public class BookAction extends HttpServlet {
      * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs
      */
-    private void sendEmail(String to, String subject, String body) {
-        final String username = "kthkun@gmail.com"; // change to your email
-        final String password = "jogh hfjt skfg vuan"; // change to your email password
+    private int sendEmail(String to, String subject, String body) {
+        final String username = "bookstorekittens@gmail.com"; // change to your email
+        final String password = "ppai xicq grne jmep"; // change to your email password
 
         Properties props = new Properties();
         props.put("mail.smtp.auth", "true");
@@ -64,9 +64,25 @@ public class BookAction extends HttpServlet {
             Transport.send(message);
 
             System.out.println("Email sent successfully");
-
+            return 1;
         } catch (MessagingException e) {
+//            return -1;
             throw new RuntimeException(e);
+        }
+
+    }
+
+    public void cancelOrder(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        int orderID = Integer.parseInt(request.getParameter("orderID"));
+        System.out.println("orderID: "+ orderID);
+        Order o = new Order();
+        int res = o.deleteOrder(orderID);
+        if (res > 0) {
+            if (res > 0) {
+                response.getWriter().write("success");
+            } else {
+                response.getWriter().write("error");
+            }
         }
     }
 
@@ -343,7 +359,7 @@ public class BookAction extends HttpServlet {
                     }
                     session.setAttribute("bookListToSort", bookList);
                     request.setAttribute("bookList", bookList);
-                     out.println("<script> alert(\"No books found to sort!\");</script>");
+                    out.println("<script> alert(\"No books found to sort!\");</script>");
                     request.getRequestDispatcher("shop.jsp").include(request, response);
                     return;
                 }
@@ -485,6 +501,7 @@ public class BookAction extends HttpServlet {
                     response.getWriter().write("error");
                 }
             }
+
             case "applyVoucher" -> {
                 String voucherCode = request.getParameter("voucherCode");
                 Voucher v = new Voucher();
@@ -542,17 +559,8 @@ public class BookAction extends HttpServlet {
                     request.getRequestDispatcher("BookAction?action=viewCart").forward(request, response);
                 }
             }
-            case "deleteOrder" -> {
-                int orderID = Integer.parseInt(request.getParameter("orderID"));
-                Order o = new Order();
-                int res = o.deleteOrder(orderID);
-                System.out.println("orderID: " + orderID);
-                System.out.println("delete id " + res);
-                if (res > 0) {
-                    response.getWriter().write("success"); // Send the JSON back to AJAX
-                } else {
-                    response.getWriter().write("error");
-                }
+            case "cancelOrder" -> {
+                cancelOrder(request, response);
             }
             case "getSavedCards" -> {
                 String paymentMethodName = (String) request.getParameter("paymentMethodName");
@@ -605,17 +613,16 @@ public class BookAction extends HttpServlet {
                     out.println(" <script>console.log(\"shippingID: " + shippingID + "\");");
                     out.println("console.log(\"addressID: " + addressID + "\");");
                     out.println("console.log(\"cardID: " + cardID + "\");");
-
                     out.println("console.log(\"Place order successful!\");</script>");
                     ArrayList<Order> orders = order.getListAllOrder(userID);
                     session.setAttribute("orders", orders);
-
-                    // Send order confirmation email
-                    String userEmail = user.getEmail();
-                    String subject = "Order Confirmation - Order #" + orderID;
-                    String emailBody = "Dear " + user.getName() + ",\n\nThank you for your order. Your order ID is " + orderID + ".\n\nBest regards,\nBook Store";
-                    sendEmail(userEmail, subject, emailBody);
-
+                    System.out.println("orders: " + orders);
+//                    // Send order confirmation email
+//                    String userEmail = user.getEmail();
+//                    String subject = "Order Confirmation - Order #" + orderID;
+//                    String emailBody = "Dear " + user.getName() + ",\n\nThank you for your order. Your order ID is " + orderID + ".\n\nBest regards,\nBook Store";
+//                    int e = sendEmail(userEmail, subject, emailBody);
+//                    System.out.println("e send email: "+e);
                     request.getRequestDispatcher("BookAction?action=viewOrder").forward(request, response);
                 } else {
                     out.println("<script>console.log(\"Failed place order!\");</script>");

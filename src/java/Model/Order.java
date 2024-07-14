@@ -227,8 +227,9 @@ public class Order implements Serializable, DatabaseInfo {
             PreparedStatement stmt = con.prepareStatement("""
                                                            SELECT orderID, UserID, ShippingMethodID, UserAddressID,
                                                           CardID, VoucherID, originPrice, TotalPrice, OrderDate
-                                                       FROM Orders
+                                                       FROM Orders where UserID=?
                                                             """);
+            stmt.setInt(1, userID);
             ResultSet rs = stmt.executeQuery();
             while (rs.next()) {
                 list.add(new Order(rs.getInt(1), rs.getInt(2), rs.getInt(3),
@@ -302,8 +303,7 @@ public class Order implements Serializable, DatabaseInfo {
     public int deleteOrder(int orderID) {
         try (Connection con = getConnect()) {
             PreparedStatement stmt = con.prepareStatement("""
-                                                           UPDATE OrderItem 
-                                                           SET OrderID = null
+                                                           DELETE OrderItem
                                                            WHERE OrderID =?
                                                            """);
             stmt.setInt(1, orderID);
@@ -409,8 +409,9 @@ public class Order implements Serializable, DatabaseInfo {
     public static void main(String[] args) {
         Order instance = new Order();
 //        System.out.println(instance.placeOrder(1,1,1,0));
-System.out.println("abc");
-        System.out.println(instance.placeOrder(1,1,1,0));
+//System.out.println("abc");
+//        System.out.println(instance.placeOrder(1,1,1,0));
+        System.out.println(instance.deleteOrder(10));
     }
 
 }
