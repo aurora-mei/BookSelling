@@ -14,7 +14,11 @@
     </servlet>
     <servlet>
         <servlet-name>BookAction</servlet-name>
-        <servlet-class>Controller.BookActionAA</servlet-class>
+        <servlet-class>Controller.BookAction</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>AdminServlet</servlet-name>
+        <servlet-class>Controller.AdminServlet</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>Authenticate</servlet-name>
@@ -23,5 +27,9 @@
     <servlet-mapping>
         <servlet-name>BookAction</servlet-name>
         <url-pattern>/BookAction</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>AdminServlet</servlet-name>
+        <url-pattern>/AdminServlet</url-pattern>
     </servlet-mapping>
 </web-app>

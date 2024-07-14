@@ -35,10 +35,10 @@ public class BookAction extends HttpServlet {
      * @param response servlet response
      * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs
-     */
-    private void sendEmail(String to, String subject, String body) {
-        final String username = "bookstorekittens@gmail.com"; // change to your email
-        final String password = "Meomeomeo"; // change to your email password
+*/
+private void sendEmail(String to, String subject, String body) {
+        final String username = "kthkun@gmail.com"; // change to your email
+        final String password = "jogh hfjt skfg vuan"; // change to your email password
 
         Properties props = new Properties();
         props.put("mail.smtp.auth", "true");
@@ -323,13 +323,31 @@ public class BookAction extends HttpServlet {
                 }
             }
             case "sort" -> {
+//                System.out.println("fuck maynua");
+//                request.getRequestDispatcher("index.jsp").forward(request, response);
                 Book b = new Book();
                 String type = (String) request.getParameter("type");
                 HttpSession session = request.getSession();
+//                ArrayList<Book> sortedBookList = (ArrayList<Book>) request.getAttribute("bookList");
                 ArrayList<Book> sortedBookList = (ArrayList<Book>) session.getAttribute("bookList");
+                  if (sortedBookList == null || sortedBookList.isEmpty()) {
+                    out.println("<script> alert(\"No books found to sort!\");</script>");
+                    request.getRequestDispatcher("shop.jsp").include(request, response);
+                    return;
+                }
                 switch (type) {
-                    case "latest" -> {
+                    case "latest" -> {                       
                         sortedBookList = b.sortLatest(sortedBookList);
+                        System.out.println("List books of latest");
+                        for (Book s : sortedBookList) {
+                            System.out.println(s);
+                        }
+                        request.setAttribute("bookList", sortedBookList);
+                        request.getRequestDispatcher("shop.jsp").forward(request, response);
+                    } case "popularity" -> {
+//                        System.out.println("searched list: "+ sortedBookList);
+                        sortedBookList = b.sortByPopularity(b.getListBook());
+                        System.out.println("after sorted list: "+ sortedBookList);
                         request.setAttribute("bookList", sortedBookList);
                         request.getRequestDispatcher("shop.jsp").forward(request, response);
                     }

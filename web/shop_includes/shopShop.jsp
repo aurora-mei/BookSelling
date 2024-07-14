@@ -22,32 +22,26 @@
                     <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">                       
                         <a href=""><input type="checkbox" class="custom-control-input" id="authors-0">
                             <label class="custom-control-label" for="authors-0">Tất Cả</label></a>
-                        <span class="badge border font-weight-normal">1000</span>
                     </div>
                     <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
                         <a href=""><input type="checkbox" class="custom-control-input" id="authors-1">
                             <label class="custom-control-label" for="authors-1">Nguyễn Nhật Ánh</label></a>
-                        <span class="badge border font-weight-normal">150</span>
                     </div>
                     <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
                         <a href=""><input type="checkbox" class="custom-control-input" id="authors-2">
                             <label class="custom-control-label" for="authors-2">Karuho Shiina</label></a>
-                        <span class="badge border font-weight-normal">295</span>
                     </div>
                     <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
                         <a href=""><input type="checkbox" class="custom-control-input" id="authors-3">
                             <label class="custom-control-label" for="authors-3">Clamp</label></a>
-                        <span class="badge border font-weight-normal">246</span>
                     </div>
                     <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
                         <a href=""><input type="checkbox" class="custom-control-input" id="authors-4">
                             <label class="custom-control-label" for="authors-4">Antoine de Saint-Exupéry</label></a>
-                        <span class="badge border font-weight-normal">145</span>
                     </div>
                     <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between">
                         <a href=""><input type="checkbox" class="custom-control-input" id="authors-5">
                             <label class="custom-control-label" for="authors-5">Susan David</label></a>
-                        <span class="badge border font-weight-normal">168</span>
                     </div>
                 </form>
             </div>
@@ -61,32 +55,26 @@
                     <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
                         <a href=""> <input type="checkbox" class="custom-control-input" id="cates-0">
                             <label class="custom-control-label" for="cates-0">Tất Cả</label></a>
-                        <span class="badge border font-weight-normal">1000</span>
                     </div>
                     <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
                         <a href=""> <input type="checkbox" class="custom-control-input" id="cates-1">
                             <label class="custom-control-label" for="cates-1">Tình Cảm Học Đường</label></a>
-                        <span class="badge border font-weight-normal">150</span>
                     </div>
                     <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
                         <a href=""> <input type="checkbox" class="custom-control-input" id="cates-2">
                             <label class="custom-control-label" for="cates-2">Tâm Lý Học</label></a>
-                        <span class="badge border font-weight-normal">295</span>
                     </div>
                     <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
                         <a href=""> <input type="checkbox" class="custom-control-input" id="cates-3">
                             <label class="custom-control-label" for="cates-3">Manga</label></a>
-                        <span class="badge border font-weight-normal">246</span>
                     </div>
                     <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
                         <a href=""> <input type="checkbox" class="custom-control-input" id="cates-4">
                             <label class="custom-control-label" for="cates-4">Comic Book</label></a>
-                        <span class="badge border font-weight-normal">145</span>
                     </div>
                     <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between">
                         <a href=""> <input type="checkbox" class="custom-control-input" id="cates-5">
                             <label class="custom-control-label" for="cates-5">Cách Mạng-Chính Trị</label></a>
-                        <span class="badge border font-weight-normal">168</span>
                     </div>
                 </form>
             </div>
@@ -101,28 +89,24 @@
                             <input type="checkbox" class="custom-control-input" id="years-0">
                             <label class="custom-control-label" for="years-0">2005 --> 2010</label>
                         </a>
-                        <span class="badge border font-weight-normal">1000</span>
                     </div>
                     <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
                         <a href="">
                             <input type="checkbox" class="custom-control-input" id="years-1">
                             <label class="custom-control-label" for="years-1">2011 --> 2016</label>
                         </a>
-                        <span class="badge border font-weight-normal">150</span>
                     </div>
                     <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
                         <a href="">
                             <input type="checkbox" class="custom-control-input" id="years-2">
                             <label class="custom-control-label" for="years-2">2017 --> 2021</label>
                         </a>
-                        <span class="badge border font-weight-normal">295</span>
                     </div>
                     <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
                         <a href="">
                             <input type="checkbox" class="custom-control-input" id="years-3">
                             <label class="custom-control-label" for="years-3">2022 --> 2024</label>
                         </a>
-                        <span class="badge border font-weight-normal">246</span>
 
                     </div>
                     <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">          
@@ -130,7 +114,6 @@
                             <input type="checkbox" class="custom-control-input" id="years-4">
                             <label class="custom-control-label" for="years-4">Đã Hoàn Thành</label>
                         </a>
-                        <span class="badge border font-weight-normal">145</span>
 
                     </div>
                     <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between">
@@ -138,7 +121,6 @@
                             <input type="checkbox" class="custom-control-input" id="years-5">
                             <label class="custom-control-label" for="years-5">Đang ra</label>
                         </a>
-                        <span class="badge border font-weight-normal">168</span>
                     </div>
                 </form>
             </div>
@@ -170,7 +152,7 @@
                             <div class="dropdown-menu dropdown-menu-right" aria-labelledby="triggerId">
 
                                 <a style='cursor: pointer;' class="dropdown-item" onclick="sortBooks('latest')">Latest</a>
-                                <a style='cursor: pointer;' class="dropdown-item" href="#">Popularity</a>
+                                <a style='cursor: pointer;' class="dropdown-item" onclick="sortBooks('popularity')">Popularity</a>
                                 <a style='cursor: pointer;' class="dropdown-item" href="#">Best Rating</a>
                             </div>
                         </div>

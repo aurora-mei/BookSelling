@@ -601,13 +601,129 @@ public ArrayList<Book> sortLatest(ArrayList<Book> bList){
         }
         return null;
     }
+    public boolean addBook(Book book) {
+        try (Connection con = getConnect()) {
+            String query = "INSERT INTO BookInfo (publisherID, title, price, priceDiscount, pages, avaQuantity, publishDate, descriptions, longDescriptions, imageURL) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            PreparedStatement stmt = con.prepareStatement(query);
+            stmt.setInt(1, book.getPublisherID());
+            stmt.setString(2, book.getTitle());
+            stmt.setBigDecimal(3, book.getPrice());
+            stmt.setBigDecimal(4, book.getPriceDiscount());
+            stmt.setInt(5, book.getPages());
+            stmt.setInt(6, book.getAvaQuantity());
+            stmt.setDate(7, book.getPublishDate());
+            stmt.setString(8, book.getDescriptions());
+            stmt.setString(9, book.getLongDescriptions());
+            stmt.setString(10, book.getImageURL());
+            int rowsInserted = stmt.executeUpdate();
+            con.close();
+            return rowsInserted > 0;
+        } catch (Exception ex) {
+            Logger.getLogger(Book.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return false;
+    }
+
+    // Delete a book
+    public boolean deleteBook(int bookID) {
+        try (Connection con = getConnect()) {
+            String query = "DELETE FROM BookInfo WHERE bookID=?";
+            PreparedStatement stmt = con.prepareStatement(query);
+            stmt.setInt(1, bookID);
+            int rowsDeleted = stmt.executeUpdate();
+            con.close();
+            return rowsDeleted > 0;
+        } catch (Exception ex) {
+            Logger.getLogger(Book.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return false;
+    }
+
+    // Update a book
+    public boolean updateBook(Book book) {
+        try (Connection con = getConnect()) {
+            String query = "UPDATE BookInfo SET publisherID=?, title=?, price=?, priceDiscount=?, pages=?, avaQuantity=?, publishDate=?, descriptions=?, longDescriptions=?, imageURL=? WHERE bookID=?";
+            PreparedStatement stmt = con.prepareStatement(query);
+            stmt.setInt(1, book.getPublisherID());
+            stmt.setString(2, book.getTitle());
+            stmt.setBigDecimal(3, book.getPrice());
+            stmt.setBigDecimal(4, book.getPriceDiscount());
+            stmt.setInt(5, book.getPages());
+            stmt.setInt(6, book.getAvaQuantity());
+            stmt.setDate(7, book.getPublishDate());
+            stmt.setString(8, book.getDescriptions());
+            stmt.setString(9, book.getLongDescriptions());
+            stmt.setString(10, book.getImageURL());
+            stmt.setInt(11, book.getBookID());
+            int rowsUpdated = stmt.executeUpdate();
+            con.close();
+            return rowsUpdated > 0;
+        } catch (Exception ex) {
+            Logger.getLogger(Book.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return false;
+    }
+
+    // View daily revenue
+    public BigDecimal getDailyRevenue(LocalDate date) {
+        BigDecimal revenue = BigDecimal.ZERO;
+        try (Connection con = getConnect()) {
+            String query = "SELECT SUM(totalPrice) FROM Orders WHERE orderDate=?";
+            PreparedStatement stmt = con.prepareStatement(query);
+            stmt.setDate(1, Date.valueOf(date));
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                revenue = rs.getBigDecimal(1);
+            }
+            con.close();
+        } catch (Exception ex) {
+            Logger.getLogger(Book.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return revenue;
+    }
+    
+    public ArrayList<Book> sortByPopularity( ArrayList<Book> books) {
+        ArrayList<Book> list = new ArrayList<>();
+         ArrayList<Book> finalList = new ArrayList<>();
+        try (Connection con = getConnect()) {
+            String query = """
+                       select bi.BookID, bi.publisherID, bi.title, bi.price,bi.priceDiscount, bi.pages, bi.avaQuantity,
+                       bi.publishDate, bi.descriptions, bi.longDescriptions, bi.imageURL
+                       from BookInfo bi
+                         JOIN (
+                               SELECT BookID
+                               FROM Comment
+                               GROUP BY BookID
+                               HAVING AVG(Rating) > 4.5
+                           ) r ON bi.BookID = r.BookID;  
+                       """;
+            PreparedStatement stmt = con.prepareStatement(query);
+           
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                list.add(new Book(rs.getInt(1), rs.getInt(2), rs.getString(3),
+                        rs.getBigDecimal(4), rs.getBigDecimal(5), rs.getInt(6),rs.getInt(7), rs.getDate(8), rs.getString(9),
+                        rs.getString(10), rs.getString(11)));
+            }
+            con.close();
+            
+            for( Book book: books){
+                for(Book bestRating : list){
+                    if(bestRating.getBookID()==book.getBookID()){
+                        finalList.add(book);
+                        break;
+                    }
+                }
+            }
+            return finalList;
+        } catch (Exception ex) {
+            Logger.getLogger(Book.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
+    }
 
     public static void main(String[] args) {
         Book a = new Book();
-        String currentDate = LocalDate.now().toString();
-        LocalDate today = LocalDate.now();
-        LocalDate firstDayOfWeek = today.with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY));
-        String firstDayOfWeekStr = firstDayOfWeek.toString();
-        System.out.println(a.getBookByTitle("Chân lý và sự thật"));
+        System.out.println(a.sortByPopularity(a.getListBook()));
     }
 }
