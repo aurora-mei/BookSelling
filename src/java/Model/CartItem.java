@@ -258,7 +258,7 @@ public class CartItem implements Serializable, DatabaseInfo {
     public static void main(String[] args) {
         CartItem s = new CartItem(3, 10, 1, 2, new BigDecimal("18.99"), new BigDecimal("15.99"));
 
-        System.out.println(s.noCartItemsByUserID(1));
+        System.out.println(s.getLanguageNameByCartID(29));
     }
 
     public int noCartItemsByUserID(int userID) {
@@ -279,5 +279,25 @@ public class CartItem implements Serializable, DatabaseInfo {
         }
         return res;
     }
+      public String getLanguageNameByCartID(int cartID) {
+        String res = null;
+        try (Connection con = getConnect()) {
+            PreparedStatement stmt = con.prepareStatement("""
+                                                           select bl.LanguageName 
+                                                           from BookLanguageInfo bl inner join CartItem ci on bl.LanguageID=ci.LanguageID
+                                                           where ci.CartItemID = ?""");
+            stmt.setInt(1, cartID);
+            ResultSet rc = stmt.executeQuery();
+            
+            while (rc.next()) {
+                res = rc.getString(1);
+            }
+            con.close();
+        } catch (Exception ex) {
+            Logger.getLogger(CartItem.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return res;
+    }
+
 
 }

@@ -63,6 +63,7 @@ public class Authenticate extends HttpServlet {
                     HttpSession newSession = request.getSession(true);
                     newSession.setMaxInactiveInterval(600 * 60);
                     newSession.setAttribute("user", s);
+                    newSession.setAttribute("userRole", s.getRoles());
                     newSession.setAttribute("userName", s.getUserName());
                     newSession.setAttribute("userID", s.getUserID());
                     Cookie acookie = new Cookie("userName", s.getUserName());

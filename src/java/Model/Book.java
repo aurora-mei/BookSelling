@@ -788,7 +788,7 @@ public class Book implements Serializable, DatabaseInfo {
 //        for (Book b : bl) {
 //            System.out.println(b);
 //        }
-System.out.println(a.getImageURLByBook(1));
+System.out.println(a.getListImagesBook(3));
     }
 
 }

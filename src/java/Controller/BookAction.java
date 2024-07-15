@@ -424,6 +424,7 @@ public class BookAction extends HttpServlet {
                     int quantity = Integer.parseInt(request.getParameter("quantity"));
 
                     CartItem cartI = new CartItem(userID, bookID, langID, quantity, price, priceDiscount);
+//                    System.out.println("cart item: "+cartI);
                     int res = cartI.newCartItem(cartI);
                     if (res > 0) {
                         response.getWriter().write("success");
@@ -444,17 +445,11 @@ public class BookAction extends HttpServlet {
                         CartItem c = new CartItem();
                         ArrayList<CartItem> cartList = c.getListCartItem(userID);
                         ArrayList<Book> booksInCart = new ArrayList<>();
-                        ArrayList<Language> langsInCart = new ArrayList<>();
                         for (CartItem cartItem : cartList) {
                             Book book = new Book();
                             book = book.getBook(cartItem.getBookID());
                             booksInCart.add(book);
-
-                            Language lang = new Language();
-                            lang = lang.getLanguage(cartItem.getBookID());
-                            langsInCart.add(lang);
                         }
-                        session.setAttribute("langsInCart", langsInCart); // Fixed here
                         session.setAttribute("booksInCart", booksInCart);
                         session.setAttribute("cartList", cartList);
                         request.getRequestDispatcher("cart.jsp").forward(request, response);
@@ -507,7 +502,20 @@ public class BookAction extends HttpServlet {
                 response.getWriter().flush(); // Ensure the response is flushed
                 response.getWriter().close(); // Ensure the writer is closed
             }
-
+          case "calNoReviews" -> {
+                Comment c = new Comment();
+                System.out.println("Calculating number of reviews");
+                int bookID = Integer.parseInt(request.getParameter("bookID"));
+                int res = c.noReviewsByBookID(bookID);
+                System.out.println("no reviews: " + res);
+                if (res > -1) {
+                    response.getWriter().write(String.valueOf(res));
+                } else {
+                    response.getWriter().write("error");
+                }
+                response.getWriter().flush(); // Ensure the response is flushed
+                response.getWriter().close(); // Ensure the writer is closed
+            }
             case "updateOrderQuantity" -> {
                 int cartItemID = Integer.parseInt(request.getParameter("cartItemID"));
                 int newQuantity = Integer.parseInt(request.getParameter("newQuantity"));

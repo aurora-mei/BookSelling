@@ -19,13 +19,13 @@
         <div class="col-lg-3 col-md-12">
             <!-- Author Start -->
             <div class="border-bottom mb-4 pb-4">
-                <h5 class="font-weight-semi-bold mb-4">Tác Giả</h5>
+                <h5 class="font-weight-semi-bold mb-4">Author</h5>
                 <form>
                     <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
 
 
                         <a href=""><input type="checkbox" class="custom-control-input" id="authors-0">
-                            <label class="custom-control-label" for="authors-0">Tất Cả</label></a>
+                            <label class="custom-control-label" for="authors-0">All</label></a>
                     </div>
                     <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
                         <a href=""><input type="checkbox" class="custom-control-input" id="authors-1">
@@ -54,11 +54,11 @@
 
             <!-- Specifies Start -->
             <div class="border-bottom mb-4 pb-4">
-                <h5 class="font-weight-semi-bold mb-4">Thể Loại</h5>
+                <h5 class="font-weight-semi-bold mb-4">Category</h5>
                 <form>
                     <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
                         <a href=""> <input type="checkbox" class="custom-control-input" id="cates-0">
-                            <label class="custom-control-label" for="cates-0">Tất Cả</label></a>
+                            <label class="custom-control-label" for="cates-0">All</label></a>
                     </div>
                     <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
                         <a href=""> <input type="checkbox" class="custom-control-input" id="cates-1">
@@ -86,7 +86,7 @@
 
             <!-- Years Start -->
             <div class="mb-5">
-                <h5 class="font-weight-semi-bold mb-4">Năm Xuất Bản</h5>
+                <h5 class="font-weight-semi-bold mb-4">Publish Year</h5>
                 <form>
                     <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
                         <a href="">
@@ -116,14 +116,14 @@
                     <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">          
                         <a href="">
                             <input type="checkbox" class="custom-control-input" id="years-4">
-                            <label class="custom-control-label" for="years-4">Đã Hoàn Thành</label>
+                            <label class="custom-control-label" for="years-4">Completed</label>
                         </a>
 
                     </div>
                     <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between">
                         <a href="">                            
                             <input type="checkbox" class="custom-control-input" id="years-5">
-                            <label class="custom-control-label" for="years-5">Đang ra</label>
+                            <label class="custom-control-label" for="years-5">Ongoing</label>
                         </a>
                     </div>
                 </form>

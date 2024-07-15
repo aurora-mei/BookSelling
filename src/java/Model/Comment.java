@@ -4,6 +4,7 @@
  */
 package Model;
 
+import static Model.CartItem.getConnect;
 import static Model.DatabaseInfo.DBURL;
 import static Model.DatabaseInfo.DRIVERNAME;
 import static Model.DatabaseInfo.PASSDB;
@@ -164,9 +165,27 @@ public class Comment implements Serializable, DatabaseInfo {
         }
         return s;
     }
+         public int noReviewsByBookID(int bookID) {
+        int res = -1;
+        try (Connection con = getConnect()) {
+            PreparedStatement stmt = con.prepareStatement("""
+                                                           select count(CommentID) as noComment
+                                                           	from Comment where BookID= ?""");
+            stmt.setInt(1, bookID);
+            ResultSet rc = stmt.executeQuery();
+            
+            while (rc.next()) {
+                res = rc.getInt(1);
+            }
+            con.close();
+        } catch (Exception ex) {
+            Logger.getLogger(CartItem.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return res;
+    }
 
     public static void main(String[] args) {
         Comment c = new Comment();
-        System.out.println(c.getAverageRating(5));
+        System.out.println(c.noReviewsByBookID(5));
     }
 }

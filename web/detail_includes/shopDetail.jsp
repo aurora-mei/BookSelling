@@ -25,25 +25,25 @@
             <div id="product-carousel" class="carousel slide" data-ride="carousel">
                 <c:choose>
                     <c:when test="${imgList!=null}">
-                <div class="carousel-inner border">
-                    <% 
-                    for(int i = 0; i < imgList.size(); i++){
-                        String imgURL = (String) imgList.get(i);
-                    %>
-                    <div class="carousel-item <% if(i == 0) out.print("active"); %>">
-                        <img class="w-100 h-100" src="<%= imgURL %>" alt="Image">
-                    </div>
-                    <% 
-                    }
-                    %>
-                </div>
+                        <div class="carousel-inner border">
+                            <% 
+                            for(int i = 0; i < imgList.size(); i++){
+                                String imgURL = (String) imgList.get(i);
+                            %>
+                            <div class="carousel-item <% if(i == 0) out.print("active"); %>">
+                                <img class="w-100 h-100" src="<%= imgURL %>" alt="Image">
+                            </div>
+                            <% 
+                            }
+                            %>
+                        </div>
                     </c:when>
                     <c:otherwise>
                         <div class="carousel-inner border">
-                    <div class="carousel-item active">
-                        <img class="w-100 h-100" src="images/sale1.jpg" alt="Image">
-                    </div>
-                </div>
+                            <div class="carousel-item active">
+                                <img class="w-100 h-100" src="images/sale1.jpg" alt="Image">
+                            </div>
+                        </div>
                     </c:otherwise>
                 </c:choose>
                 <a class="carousel-control-prev" href="#product-carousel" data-slide="prev">
@@ -111,20 +111,20 @@
                 <p class="text-dark font-weight-medium mb-0 mr-3">Languages:</p>
                 <c:choose><c:when test="${langList!=null}">
                 <form>
-                    <%            
-for(Object o:langList){
-request.setAttribute("lang",(Model.Language)o);
-                    %>
+                            <%            
+        for(Object o:langList){
+        request.setAttribute("lang",(Model.Language)o);
+                            %>
                     <div class="custom-control custom-radio custom-control-inline">
                         <input type="radio" class="custom-control-input" id="${lang.languageID}" value="${lang.languageID}" name="lang">
                         <label class="custom-control-label" for="${lang.languageID}">${lang.languageName}</label>
                     </div>
-                    <%
-}
-                    %>
+                            <%
+        }
+                            %>
                 </form>  
-                </c:when>
-                <c:otherwise></c:otherwise>
+                    </c:when>
+                    <c:otherwise></c:otherwise>
                 </c:choose>
             </div>
             <div class="d-flex align-items-center mb-4 pt-2">
@@ -174,7 +174,7 @@ request.setAttribute("lang",(Model.Language)o);
             <div class="nav nav-tabs justify-content-center border-secondary mb-4">
                 <a class="nav-item nav-link active" data-toggle="tab" href="#tab-pane-1">Book Description</a>
                 <a class="nav-item nav-link" data-toggle="tab" href="#tab-pane-2">Author Information</a>
-                <a class="nav-item nav-link" data-toggle="tab" href="#tab-pane-3">Reviews (0)</a>
+                <a id="review" class="nav-item nav-link" data-toggle="tab" href="#tab-pane-3" data-bookID="${book.bookID}">Reviews </a>
             </div>
             <div class="tab-content">
                 <div class="tab-pane fade show active" id="tab-pane-1">
@@ -183,17 +183,18 @@ request.setAttribute("lang",(Model.Language)o);
                 </div>
                 <div class="tab-pane fade" id="tab-pane-2">
                     <div class="row">
-                    <h4 class="mb-3">Author Information</h4>
+                    
                     <!--<p>Eos no lorem eirmod diam diam, eos elitr et gubergren diam sea. Consetetur vero aliquyam invidunt duo dolores et duo sit. Vero diam ea vero et dolore rebum, dolor rebum eirmod consetetur invidunt sed sed et, lorem duo et eos elitr, sadipscing kasd ipsum rebum diam. Dolore diam stet rebum sed tempor kasd eirmod. Takimata kasd ipsum accusam sadipscing, eos dolores sit no ut diam consetetur duo justo est, sit sanctus diam tempor aliquyam eirmod nonumy rebum dolor accusam, ipsum kasd eos consetetur at sit rebum, diam kasd invidunt tempor lorem, ipsum lorem elitr sanctus eirmod takimata dolor ea invidunt.</p>-->
-                    <%            
-for(Object o:auList){
-request.setAttribute("author",(Model.Author)o);
-                    %>
+                        <%            
+    for(Object o:auList){
+    request.setAttribute("author",(Model.Author)o);
+                        %>
                     
                         <div class="col-md-6">
+                            <h4 class="mb-3">Author Information</h4>
                             <ul class="list-group list-group-flush">
                                 <li class="list-group-item px-0">
-                                    <img src="${author.authorImageURL}" alt="alt" style="width: 130px;border-radius: 50%;"/>
+                                    <img src="${author.authorImageURL}" alt="alt" style="width: 100px;border-radius: 50%;"/>
                                 </li>
                                 <li class="list-group-item px-0">
                                     <h5>Name: </h5>${author.authorName}
@@ -218,7 +219,7 @@ request.setAttribute("author",(Model.Author)o);
                             <div class="media mb-4">
                                 <c:choose>
                                     <c:when test="${uReviewed!=null && cReviewed!=null}">
-                                <img src="${uReviewed.avatar}" alt="Image" class="img-fluid mr-3 mt-1" style="width: 45px;border-radius: 50%;">
+                                <img src="${uReviewed.avatar}" alt="Image" class="img-fluid mr-3 mt-1" style="width: 50px;border-radius: 30%;">
                                 <div class="media-body">
                                     <h6>${uReviewed.name}<small> - <i>${cReviewed.commentDate}</i></small></h6>
                                     <div class="text-primary mb-2">
@@ -252,7 +253,7 @@ request.setAttribute("author",(Model.Author)o);
                         </div>
                         <div class="col-md-6">
                             <h4 class="mb-4">Leave a review</h4>
-                            <small>Your email address will not be published. Required fields are marked *</small>
+<!--                            <small>Your email address will not be published. Required fields are marked *</small>-->
                             <div class="d-flex my-3">
                                 <p class="mb-0 mr-2">Your Rating * :</p>
                                 <div class="text-primary">
@@ -263,18 +264,11 @@ request.setAttribute("author",(Model.Author)o);
                                     <i class="far fa-star"></i>
                                 </div>
                             </div>
-                            <form>
+                            <form action="BookAction" method="get">
+                            <input type="hidden" id="action" name="action" value='newComment'>
                                 <div class="form-group">
                                     <label for="message">Your Review *</label>
                                     <textarea id="message" cols="30" rows="5" class="form-control"></textarea>
-                                </div>
-                                <div class="form-group">
-                                    <label for="name">Your Name *</label>
-                                    <input type="text" class="form-control" id="name">
-                                </div>
-                                <div class="form-group">
-                                    <label for="email">Your Email *</label>
-                                    <input type="email" class="form-control" id="email">
                                 </div>
                                 <div class="form-group mb-0">
                                     <input type="submit" value="Leave Your Review" class="btn btn-primary px-3">
@@ -325,9 +319,34 @@ request.setAttribute("author",(Model.Author)o);
                             }
                         });
                     }
-                     function goToCart() {
-                       window.location.href = 'BookAction?action=viewCart';
-                     }
+                    function goToCart() {
+                        window.location.href = 'BookAction?action=viewCart';
+                    }
+                    $(document).ready(function () {
+                        calNoReviews();
+
+                        function calNoReviews() {
+                            var bookID = $("#review").data("bookid");
+                            console.log("book id: " + bookID);
+                            $.ajax({
+                                url: "BookAction?action=calNoReviews",
+                                method: "GET",
+                                data: {bookID: bookID},
+                                success: function (response) {
+                                    if (response.trim() !== "") { // Check if response is not empty
+                                        $("#review").text("Reviews (" + response + ")");
+                                        console.log("response: " + response);
+                                        console.log("Reviews calculated successfully: " + response);
+                                    } else {
+                                        console.log("Empty response received or response is null.");
+                                    }
+                                },
+                                error: function (jqXHR, textStatus, errorThrown) {
+                                    console.error("Error occurred while calculating no reviews: " + textStatus, errorThrown);
+                                }
+                            });
+                        }
+                    });
 
 </script>
 

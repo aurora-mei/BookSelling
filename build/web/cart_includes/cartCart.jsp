@@ -27,14 +27,18 @@
                 <tbody class="align-middle">
                     <c:forEach var="cart" items="${sessionScope.cartList}" varStatus="status">
                         <c:set var="b" value="${sessionScope.booksInCart[status.index]}" />
-                        <c:set var="l" value="${sessionScope.langsInCart[status.index]}" />
+                        <% 
+                        CartItem ca = (CartItem) pageContext.getAttribute("cart");
+                        String languageName = ca.getLanguageNameByCartID(ca.getCartItemID());
+                        request.setAttribute("languageName",languageName);
+                        %>
                         <tr>
                             <td style="width:30px;"><input class='add-order-item' type="checkbox" id="cart-${status.index}" style="width: 20px;" value="${cart.cartItemID}"> </td>
                             <td class="align-middle" style="display:flex;justify-content: space-between;align-items: center;">
                                 <img src="${b.imageURL}" alt="" style="width: 30px;"> 
                                 <p style="font-size: 15px;">${b.title}</p>
                             </td>
-                            <td class="align-middle">${l.languageName}</td>
+                            <td class="align-middle">${languageName}</td>
                             <td class="align-middle"><pre>${cart.priceDiscount} <del>${cart.price}</del></pre></td>
                             <td class="align-middle">
                                 <div class="input-group quantity mx-auto" style="width: 100px;">
