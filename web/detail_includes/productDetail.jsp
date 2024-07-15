@@ -22,8 +22,15 @@ request.setAttribute("otherBook",(Model.Book)o);
                 %>
                 <div class="card product-item border-0">
                     <div class="card-header product-img position-relative overflow-hidden bg-transparent border p-0">
-
-                        <img class="img-fluid w-100" src="<%= (String) imgList.get(0)%>" alt="">
+                        <%
+                            
+                            Book bo = (Model.Book)request.getAttribute("otherBook");
+                        String imgURL = bo.getImageURLByBook(bo.getBookID());
+                        request.setAttribute("imgURL",imgURL);
+                        System.out.println("img: "+imgURL);
+                        %>
+                        <a href="BookAction?action=bookShoppingTitle&title=${otherBook.title}" style="cursor:pointer;">
+                            <img class="img-fluid w-100" src="${imgURL}" alt="${otherBook.title}"></a>
                     </div>
                     <div class="card-body border-left border-right text-center p-0 pt-4 pb-3">
                         <h6 class="text-truncate mb-3">${otherBook.title}</h6>

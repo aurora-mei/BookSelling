@@ -448,9 +448,6 @@ public class BookActionAA extends HttpServlet {
                 int orderID = o.proceedCheckout(userID, voucherCode, subTotal, cartItemIDs);
                 if (orderID > 0) {
                     //lấy book được order
-                    Book bo = new Book();
-                    ArrayList<Book> bookOrderList = bo.getListBookFromOrderID(orderID);
-                    session.setAttribute("bookOrderList", bookOrderList);
                     session.setAttribute("order", o.getOrder(orderID));
                     //lấy các phương thức thanh toán
                     PaymentMethod p = new PaymentMethod();
@@ -503,15 +500,7 @@ public class BookActionAA extends HttpServlet {
                 Order o = new Order();
                 User user = (User) session.getAttribute("user");
                 int userID = user.getUserID();
-                ArrayList<Order> orders = o.getListAllOrder(userID);
-                Book bo = new Book();
-
-                for (Order order : orders) {
-                    ArrayList<Book> bookOrderList = bo.getListBookFromOrderID(order.getOrderID());
-                    session.setAttribute("bookOrderList" + order.getOrderID(), bookOrderList);
-                    System.out.println(bookOrderList);
-                    out.println(" <script>console.log(\"bookOrderList: " + bookOrderList + "\");</script>");
-                }
+                ArrayList<Order> orders = o.getListOrderByUserID(userID);
                 session.setAttribute("orders", orders);
                 request.getRequestDispatcher("ordered.jsp").include(request, response);
             }
@@ -534,7 +523,7 @@ public class BookActionAA extends HttpServlet {
                     out.println("console.log(\"cardID: " + cardID + "\");");
 
                     out.println("console.log(\"Place order successful!\");</script>");
-                    ArrayList<Order> orders = order.getListAllOrder(userID);
+                    ArrayList<Order> orders = order.getListOrderByUserID(userID);
                     session.setAttribute("orders", orders);
                     request.getRequestDispatcher("BookAction?action=viewOrder").forward(request, response);
                 } else {

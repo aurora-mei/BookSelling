@@ -15,8 +15,12 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.apache.tomcat.jakartaee.commons.lang3.tuple.Pair;
 
 public class Order implements Serializable, DatabaseInfo {
 
@@ -200,7 +204,9 @@ public class Order implements Serializable, DatabaseInfo {
     }
 
     public String getPaymentNameByCardID(int cardID) {
-        if(cardID ==0){return "Cash On Delivery";}
+        if (cardID == 0) {
+            return "Cash On Delivery";
+        }
         String s = "";
         try (Connection con = getConnect()) {
             PreparedStatement stmt = con.prepareStatement("""
@@ -220,8 +226,7 @@ public class Order implements Serializable, DatabaseInfo {
         return s;
     }
 
-
-    public ArrayList<Order> getListAllOrder(int userID) {
+    public ArrayList<Order> getListOrderByUserID(int userID) {
         ArrayList<Order> list = new ArrayList<>();
         try (Connection con = getConnect()) {
             PreparedStatement stmt = con.prepareStatement("""
@@ -242,6 +247,70 @@ public class Order implements Serializable, DatabaseInfo {
             Logger.getLogger(Book.class.getName()).log(Level.SEVERE, null, ex);
         }
         return null;
+    }
+
+    public ArrayList<Book> getListBookByOrderID(int orderID) {
+        ArrayList<Book> list = new ArrayList<>();
+        try (Connection con = getConnect()) {
+            PreparedStatement stmt = con.prepareStatement("""
+                                                          select bi.BookID, bi.publisherID, bi.title, bi.price,bi.priceDiscount, bi.pages, bi.avaQuantity,
+                                                                              bi.publishDate, bi.descriptions, bi.longDescriptions, bi.imageURL
+                                                                              from BookInfo bi inner join OrderItem oi on bi.bookID = oi.bookID
+                                                          where orderID=?
+                                                            """);
+            stmt.setInt(1, orderID);
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                list.add(new Book(rs.getInt(1), rs.getInt(2), rs.getString(3),
+                        rs.getBigDecimal(4), rs.getBigDecimal(5), rs.getInt(6),
+                        rs.getInt(7), rs.getDate(8), rs.getString(9),
+                        rs.getString(10), rs.getString(11)));
+            }
+            con.close();
+            return list;
+        } catch (Exception ex) {
+            Logger.getLogger(Book.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
+    }
+
+    public ArrayList<OrderItem> getListOrderItemByOrderID(int orderID) {
+        ArrayList<OrderItem> list = new ArrayList<>();
+        try (Connection con = getConnect()) {
+            PreparedStatement stmt = con.prepareStatement("""
+                                                         SELECT OrderItemID, OrderID, BookID, Quantity, LanguageID, Price, PriceDiscount, TotalPrice
+                                                        FROM OrderItem  
+                                                          where orderID=?
+                                                            """);
+            stmt.setInt(1, orderID);
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                list.add(new OrderItem(rs.getInt(1), rs.getInt(2), rs.getInt(3), rs.getInt(4),
+                        rs.getInt(5), rs.getBigDecimal(6), rs.getBigDecimal(7), rs.getBigDecimal(8)));
+            }
+            con.close();
+            return list;
+        } catch (Exception ex) {
+            Logger.getLogger(Book.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
+    }
+    
+       public Map<OrderItem, Book> getOrderItemsWithBooksMap() {
+        Map<OrderItem, Book> itemsWithBooksMap = new HashMap<>();
+        ArrayList<OrderItem> orderItems = getListOrderItemByOrderID(getOrderID());
+        ArrayList<Book> books = getListBookByOrderID(getOrderID());
+        
+        // Populate the HashMap
+        for (OrderItem item : orderItems) {
+            for (Book book : books) {
+                if (item.getBookID() == book.getBookID()) {
+                    itemsWithBooksMap.put(item, book);
+                    break;
+                }
+            }
+        }
+        return itemsWithBooksMap;
     }
 
     public int proceedCheckout(int userID, String voucherCode, BigDecimal originPrice, ArrayList<Integer> cartItemIDs) {
@@ -330,10 +399,11 @@ public class Order implements Serializable, DatabaseInfo {
                                                            """);
             stmt.setInt(1, shippingID);
             stmt.setInt(2, addressID);
-            if(cardID==0){
+            if (cardID == 0) {
                 stmt.setObject(3, null);
-            }else{
-            stmt.setInt(3, cardID);}
+            } else {
+                stmt.setInt(3, cardID);
+            }
             stmt.setInt(4, orderID);
             stmt.executeUpdate();
 
@@ -353,8 +423,8 @@ public class Order implements Serializable, DatabaseInfo {
                                                            (select OrderItemID
                                                            from OrderItem where OrderID = ?)
                                                            """);
-             stmt3.setInt(1, orderID);
-              stmt3.executeUpdate();
+            stmt3.setInt(1, orderID);
+            stmt3.executeUpdate();
             con.close();
             return orderID;
         } catch (Exception ex) {
@@ -362,17 +432,17 @@ public class Order implements Serializable, DatabaseInfo {
         }
         return 0;
     }
-    
-        public int afterPlaceOrder(int orderID) {
-        try (Connection con = getConnect()) {           
+
+    public int afterPlaceOrder(int orderID) {
+        try (Connection con = getConnect()) {
             PreparedStatement stmt3 = con.prepareStatement("""
                                                             Delete CartItem
                                                            WHERE CartItemID in 
                                                            (select OrderItemID
                                                            from OrderItem where OrderID = ?)
                                                            """);
-             stmt3.setInt(1, orderID);
-             stmt3.executeUpdate();
+            stmt3.setInt(1, orderID);
+            stmt3.executeUpdate();
             con.close();
             return orderID;
         } catch (Exception ex) {
@@ -380,8 +450,8 @@ public class Order implements Serializable, DatabaseInfo {
         }
         return 0;
     }
-        
-        public double getRevenueByDate(String date) throws SQLException {
+
+    public double getRevenueByDate(String date) throws SQLException {
         double revenue = 0;
         Connection conn = null;
         PreparedStatement ps = null;
@@ -402,7 +472,7 @@ public class Order implements Serializable, DatabaseInfo {
         } finally {
             conn.close(); // Đảm bảo đóng kết nối, statement và result set
         }
-        
+
         return revenue;
     }
 
@@ -411,7 +481,10 @@ public class Order implements Serializable, DatabaseInfo {
 //        System.out.println(instance.placeOrder(1,1,1,0));
 //System.out.println("abc");
 //        System.out.println(instance.placeOrder(1,1,1,0));
-        System.out.println(instance.deleteOrder(10));
+        ArrayList<OrderItem> l = instance.getListOrderItemByOrderID(28);
+        for (OrderItem o : l) {
+            System.out.println(o);
+        }
     }
 
 }

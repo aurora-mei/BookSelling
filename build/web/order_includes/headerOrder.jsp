@@ -1,7 +1,11 @@
-<%-- Document : header Created on : Jul 2, 2024, 10:39:32 AM Author : THANH HUYEN --%>
+<%-- 
+    Document   : headerCart
+    Created on : Jul 2, 2024, 11:08:27 PM
+    Author     : THANH HUYEN
+--%>
 
-<%@page contentType="text/html" pageEncoding="UTF-8" %>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>  
 <!DOCTYPE html>
 <html lang="en">
 
@@ -114,9 +118,9 @@
 
 
         <!-- Navbar Start -->
-<!--        <div class="container-fluid">
+        <div class="container-fluid">
             <div class="row border-top px-xl-5">
-                                <div class="col-lg-3 d-none d-lg-block">
+                <!--                <div class="col-lg-3 d-none d-lg-block">
                             <a class="btn shadow-none d-flex align-items-center justify-content-between bg-primary text-white w-100" data-toggle="collapse" href="#navbar-vertical" style="height: 65px; margin-top: -1px; padding: 0 30px;">
                                 <h6 class="m-0">Categories</h6>
                                 <i class="fa fa-angle-down text-dark"></i>
@@ -142,7 +146,7 @@
                                     <a href="" class="nav-item nav-link">Shoes</a>
                                 </div>
                             </nav>
-                        </div>
+                        </div>-->
                 <div class="col-lg-9">
                     <nav class="navbar navbar-expand-lg bg-light navbar-light py-3 py-lg-0 px-0">
                         <a href="" class="text-decoration-none d-block d-lg-none">
@@ -156,16 +160,16 @@
                             <div class="navbar-nav mr-auto py-0">
                                 <a href="index.html" class="nav-item nav-link">Home</a>
                                 <a href="BookAction?action=filter&by=none"
-                                   class="nav-item nav-link active">Shop</a>
+                                   class="nav-item nav-link ">Shop</a>
                                 <a href="BookAction?action=bookShoppingTitle&title=${sessionScope.lastTitle}"
                                    class="nav-item nav-link">Shop Detail</a>
                                 <div class="nav-item dropdown">
-                                    <a href="#" class="nav-link dropdown-toggle"
+                                    <a href="#" class="nav-link dropdown-toggle active"
                                        data-toggle="dropdown">Pages</a>
                                     <div class="dropdown-menu rounded-0 m-0">
                                         <a href="BookAction?action=viewCart" class="dropdown-item">Shopping
                                             Cart</a>
-                                        <a href="BookAction?action=viewOrder" class="dropdown-item">Orders</a>
+                                        <a href="BookAction?action=viewOrder" class="dropdown-item active">Orders</a>
                                     </div>
                                 </div>
                                 <a href="contact.jsp" class="nav-item nav-link">Contact</a>
@@ -186,8 +190,22 @@
                     </nav>
                 </div>
             </div>
-        </div>-->
+        </div>
         <!-- Navbar End -->
+
+
+        <!-- Page Header Start -->
+        <div class=" custom-page-header">
+            <div class="d-flex flex-column align-items-center justify-content-center" style="min-height: 300px">
+                <h1 class="font-weight-semi-bold text-uppercase mb-3">Order List</h1>
+                <div class="d-inline-flex">
+                    <p class="m-0"><a href="index.html">Home</a></p>
+                    <p class="m-0 px-2">-</p>
+                    <p class="m-0">Shop</p>
+                </div>
+            </div>
+        </div>
+        <!-- Page Header End -->
 
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
            <script>

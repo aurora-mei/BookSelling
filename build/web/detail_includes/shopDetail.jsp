@@ -141,10 +141,14 @@ request.setAttribute("lang",(Model.Language)o);
                         </button>
                     </div>
                 </div>
+
                 <button class="btn btn-primary px-3" onclick="addToCart()">
                     <i class="fa fa-shopping-cart mr-1"></i> Add To Cart
                 </button>
 
+                <button class="btn btn-primary px-3" onclick="goToCart()" style='margin-left:18px;'>
+                    <i class="fa fa-shopping-cart mr-1"></i> Buy Now
+                </button>
             </div>
             <div class="d-flex pt-2">
                 <p class="text-dark font-weight-medium mb-0 mr-2">Share on:</p>
@@ -321,6 +325,9 @@ request.setAttribute("author",(Model.Author)o);
                             }
                         });
                     }
+                     function goToCart() {
+                       window.location.href = 'BookAction?action=viewCart';
+                     }
 
 </script>
 

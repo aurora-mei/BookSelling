@@ -176,7 +176,7 @@ request.setAttribute("bo",(Model.Book)o);
                 <div class="col-lg-4 col-md-6 col-sm-12 pb-1">
                     <div class="card product-item border-0 mb-4">
                         <div class="card-header product-img position-relative overflow-hidden bg-transparent border p-0">
-                            <img class="img-fluid w-100" src="${bo.imageURL}" alt="">
+                            <a href="BookAction?action=bookShoppingTitle&title=${bo.title}" style="cursor: pointer;"><img class="img-fluid w-100" src="${bo.imageURL}" alt=""></a>
                         </div>
                         <div class="card-body border-left border-right text-center p-0 pt-4 pb-3">
                             <h6 class="text-truncate mb-3">${bo.title}</h6>
@@ -226,6 +226,32 @@ String currentYear = "" + Calendar.getInstance().get(Calendar.YEAR);
 %>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script>
+                                    function searchByName() {
+                                        var name = $('input[placeholder="Search by name"]').val();
+                                        console.log("name: " + name);
+                                        if (name.length === 0) {
+                                            return;
+                                        }
+                                        var form = $('<form></form>').attr('action', 'BookAction').attr('method', 'get');
+                                        form.append($('<input>').attr('type', 'hidden').attr('name', 'action').attr('value', 'search'));
+                                        form.append($('<input>').attr('type', 'hidden').attr('name', 'by').attr('value', 'name'));
+                                        form.append($('<input>').attr('type', 'hidden').attr('name', 'name').attr('value', name));
+                                        // Append the form to the body and submit it
+                                        $('body').append(form);
+                                        form.submit();
+
+                                        // Set the value of the input field to the search term after the form is submitted
+                                        $('input[placeholder="Search by name"]').val(name);
+                                    }
+                                    function sortBooks(type) {
+                                        var form = $('<form></form>').attr('action', 'BookAction').attr('method', 'get');
+                                        form.append($('<input>').attr('type', 'hidden').attr('name', 'action').attr('value', 'sort'));
+                                        form.append($('<input>').attr('type', 'hidden').attr('name', 'type').attr('value', type));
+                                        // Append the form to the body and submit it
+                                        $('body').append(form);
+                                        form.submit();
+                                    }
+
                                     $(document).ready(function () {
                                         var years = [
                                             {id: 0, minY: "2005", maxY: "2010"},
@@ -239,9 +265,9 @@ String currentYear = "" + Calendar.getInstance().get(Calendar.YEAR);
                                         years.forEach(function (year) {
                                             var checkbox = "#years-" + year.id;
                                             // Retrieve and apply the stored state
-                                            if (localStorage.getItem('checkbox_state_' + year.id) === 'true') {
-                                                $(checkbox).prop('checked', true);
-                                            }
+//                                            if (localStorage.getItem('checkbox_state_' + year.id) === 'true') {
+//                                                $(checkbox).prop('checked', true);
+//                                            }
                                             $(checkbox).click(function () {
                                                 localStorage.setItem('checkbox_state_' + year.id, $(checkbox).is(':checked'));
                                                 if ($(checkbox).is(':checked')) {
@@ -264,9 +290,9 @@ String currentYear = "" + Calendar.getInstance().get(Calendar.YEAR);
                                         authors.forEach(function (author) {
                                             var checkbox = "#authors-" + author.id;
                                             // Retrieve and apply the stored state
-                                            if (localStorage.getItem('checkbox_state_' + author.id) === 'true') {
-                                                $(checkbox).prop('checked', true);
-                                            }
+//                                            if (localStorage.getItem('checkbox_state_' + author.id) === 'true') {
+//                                                $(checkbox).prop('checked', true);
+//                                            }
                                             $(checkbox).click(function () {
                                                 localStorage.setItem('checkbox_state_' + author.id, $(checkbox).is(':checked'));
                                                 if ($(checkbox).is(':checked')) {
@@ -289,9 +315,9 @@ String currentYear = "" + Calendar.getInstance().get(Calendar.YEAR);
                                         cates.forEach(function (cate) {
                                             var checkbox = "#cates-" + cate.id;
                                             // Retrieve and apply the stored state
-                                            if (localStorage.getItem('checkbox_state_' + cate.id) === 'true') {
-                                                $(checkbox).prop('checked', true);
-                                            }
+//                                            if (localStorage.getItem('checkbox_state_' + cate.id) === 'true') {
+//                                                $(checkbox).prop('checked', true);
+//                                            }
                                             $(checkbox).click(function () {
                                                 localStorage.setItem('checkbox_state_' + cate.id, $(checkbox).is(':checked'));
                                                 if ($(checkbox).is(':checked')) {
@@ -302,6 +328,35 @@ String currentYear = "" + Calendar.getInstance().get(Calendar.YEAR);
                                             });
                                         });
                                     });
+
+                                    document.addEventListener('DOMContentLoaded', (event) => {
+                                        // Function to initialize checkboxes based on localStorage
+                                        function initializeCheckboxes() {
+                                            document.querySelectorAll('.custom-control-input').forEach((checkbox) => {
+                                                const checkboxId = checkbox.id;
+                                                if (localStorage.getItem('checkbox_state_' + checkboxId) === 'true') {
+                                                    checkbox.checked = true;
+                                                }
+                                            });
+                                        }
+
+                                        // Function to save checkbox state to localStorage
+                                        function saveCheckboxState(checkbox) {
+                                            const checkboxId = checkbox.id;
+                                            localStorage.setItem('checkbox_state_' + checkboxId, checkbox.checked);
+                                        }
+
+                                        // Initialize checkboxes on page load
+                                        initializeCheckboxes();
+
+                                        // Add event listener to all checkboxes
+                                        document.querySelectorAll('.custom-control-input').forEach((checkbox) => {
+                                            checkbox.addEventListener('change', () => {
+                                                saveCheckboxState(checkbox);
+                                            });
+                                        });
+                                    });
+
 </script>
 
 <!-- Shop End -->

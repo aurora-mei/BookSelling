@@ -69,14 +69,14 @@ public class BookAction extends HttpServlet {
             return 1;
         } catch (MessagingException e) {
             System.out.println(e);
-                throw new MessagingException();
+            throw new MessagingException();
 
         }
     }
 
     public void cancelOrder(HttpServletRequest request, HttpServletResponse response) throws IOException {
         int orderID = Integer.parseInt(request.getParameter("orderID"));
-        System.out.println("orderID: "+ orderID);
+        System.out.println("orderID: " + orderID);
         Order o = new Order();
         int res = o.deleteOrder(orderID);
         if (res > 0) {
@@ -338,7 +338,7 @@ public class BookAction extends HttpServlet {
                         }
                         HttpSession session = request.getSession(true);
                         session.setAttribute("bookListToSort", resSearch);
-                         request.setAttribute("keyw", keyword);
+                        request.setAttribute("keyw", keyword);
                         request.setAttribute("bookList", resSearch);
                         out.println("<script>$('input[placeholder=\"Search books by title,year publish,description\"]').val(" + keyword + ")</script>");
                         request.getRequestDispatcher("shop.jsp").include(request, response);
@@ -364,13 +364,13 @@ public class BookAction extends HttpServlet {
 //                request.getRequestDispatcher("index.jsp").forward(request, response);
                 Book b = new Book();
                 String type = (String) request.getParameter("type");
-                HttpSession session = request.getSession();
+                HttpSession session = request.getSession(false);
 //                ArrayList<Book> sortedBookList = (ArrayList<Book>) request.getAttribute("bookList");
                 ArrayList<Book> sortedBookList = (ArrayList<Book>) session.getAttribute("bookListToSort");
                 if (sortedBookList == null || sortedBookList.isEmpty()) {
                     ArrayList<Book> bookList = new ArrayList<>();
                     bookList = b.getListBook();
-                    System.out.println("List book of all");
+                    System.out.println("List book of all to sort");
                     for (Book s : bookList) {
                         System.out.println(s);
                     }
@@ -485,6 +485,29 @@ public class BookAction extends HttpServlet {
                     response.getWriter().write("error");
                 }
             }
+            case "calNoCartItems" -> {
+                System.out.println("Calculating number of cart items");
+                HttpSession session = request.getSession(false); // Use false to prevent creating a new session if one doesn't exist
+                if (session != null) {
+                    User user = (User) session.getAttribute("user");
+                    if (user != null) {
+                        int userID = user.getUserID();
+                        CartItem c = new CartItem();
+                        int noCartItems = c.noCartItemsByUserID(userID);
+                        System.out.println("Number of cart items: " + noCartItems);
+                        response.getWriter().write(String.valueOf(noCartItems));
+                    } else {
+                        System.out.println("User not found in session");
+                        response.getWriter().write("0");
+                    }
+                } else {
+                    System.out.println("Session not found");
+                    response.getWriter().write("0");
+                }
+                response.getWriter().flush(); // Ensure the response is flushed
+                response.getWriter().close(); // Ensure the writer is closed
+            }
+
             case "updateOrderQuantity" -> {
                 int cartItemID = Integer.parseInt(request.getParameter("cartItemID"));
                 int newQuantity = Integer.parseInt(request.getParameter("newQuantity"));
@@ -555,9 +578,6 @@ public class BookAction extends HttpServlet {
                 int orderID = o.proceedCheckout(userID, voucherCode, subTotal, cartItemIDs);
                 if (orderID > 0) {
                     //lấy book được order
-                    Book bo = new Book();
-                    ArrayList<Book> bookOrderList = bo.getListBookFromOrderID(orderID);
-                    session.setAttribute("bookOrderList", bookOrderList);
                     session.setAttribute("order", o.getOrder(orderID));
                     //lấy các phương thức thanh toán
                     PaymentMethod p = new PaymentMethod();
@@ -601,15 +621,8 @@ public class BookAction extends HttpServlet {
                 Order o = new Order();
                 User user = (User) session.getAttribute("user");
                 int userID = user.getUserID();
-                ArrayList<Order> orders = o.getListAllOrder(userID);
-                Book bo = new Book();
+                ArrayList<Order> orders = o.getListOrderByUserID(userID);
 
-                for (Order order : orders) {
-                    ArrayList<Book> bookOrderList = bo.getListBookFromOrderID(order.getOrderID());
-                    session.setAttribute("bookOrderList" + order.getOrderID(), bookOrderList);
-                    System.out.println(bookOrderList);
-                    out.println(" <script>console.log(\"bookOrderList: " + bookOrderList + "\");</script>");
-                }
                 session.setAttribute("orders", orders);
                 request.getRequestDispatcher("ordered.jsp").include(request, response);
             }
@@ -631,17 +644,17 @@ public class BookAction extends HttpServlet {
 //                    out.println("console.log(\"addressID: " + addressID + "\");");
 //                    out.println("console.log(\"cardID: " + cardID + "\");");
 //                    out.println("console.log(\"Place order successful!\");</script>");
-                    ArrayList<Order> orders = order.getListAllOrder(userID);
+                    ArrayList<Order> orders = order.getListOrderByUserID(userID);
                     session.setAttribute("orders", orders);
                     System.out.println("orders: " + orders);
-                    
+
                     // Send order confirmation email
                     String userEmail = user.getEmail();
                     String subject = "Order Confirmation - Order #" + orderID;
                     String emailBody = "Dear " + user.getName() + ",\n\nThank you for your order. Your order ID is " + orderID + ".\n\nBest regards,\nBook Store";
                     int e = sendEmail(userEmail, subject, emailBody);
-                    System.out.println("e send email: "+e);
-                    
+                    System.out.println("e send email: " + e);
+
                     request.getRequestDispatcher("BookAction?action=viewOrder").forward(request, response);
                 } else {
                     out.println("<script>console.log(\"Failed place order!\");</script>");

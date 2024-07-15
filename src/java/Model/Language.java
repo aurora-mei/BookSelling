@@ -87,8 +87,26 @@ public class Language implements Serializable, DatabaseInfo {
         }
         return s;
     }
+      public String getLanguageNameByOrderItemID(int OrderItemID) {
+        String s = null;
+        try (Connection con = getConnect()) {
+            PreparedStatement stmt = con.prepareStatement("""
+                                                          SELECT LanguageName FROM BookLanguageInfo bl inner join OrderItem oi on bl.LanguageID=oi.LanguageID
+                                                            WHERE oi.OrderItemID=?
+                                                          """);
+            stmt.setInt(1, OrderItemID);
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                s = rs.getString("LanguageName");
+            }
+            con.close();
+        } catch (Exception ex) {
+            Logger.getLogger(Book.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return s;
+    }
      public static void main(String[] args) {
         Language a = new Language();
-         System.out.println(a.getLanguage(1));
+         System.out.println(a.getLanguageNameByOrderItemID(1));
     }
 }

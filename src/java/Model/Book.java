@@ -215,7 +215,8 @@ public class Book implements Serializable, DatabaseInfo {
         }
         return null;
     }
-      public ArrayList<Book> searchByName(String name) {
+
+    public ArrayList<Book> searchByName(String name) {
         ArrayList<Book> list = new ArrayList<>();
         try (Connection con = getConnect()) {
             String query = """
@@ -231,29 +232,6 @@ public class Book implements Serializable, DatabaseInfo {
                         rs.getBigDecimal(4), rs.getBigDecimal(5), rs.getInt(6),
                         rs.getInt(7), rs.getDate(8), rs.getString(9),
                         rs.getString(10), rs.getString(11)));
-            }
-            con.close();
-            return list;
-        } catch (Exception ex) {
-            Logger.getLogger(Book.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return null;
-    }
-
-    public ArrayList<Book> getListBookFromOrderID(int orderID) {
-        ArrayList<Book> list = new ArrayList<>();
-        try (Connection con = getConnect()) {
-            String query = """
-                           select b.BookID,b.Title,oi.Price,oi.PriceDiscount,oi.quantity,b.ImageURL
-                           from OrderItem oi inner join Orders o on oi.OrderID=o.OrderID
-                           inner join BookInfo b on oi.BookID=b.BookID 
-                           where oi.OrderID=?""";
-            PreparedStatement stmt = con.prepareStatement(query);
-            stmt.setInt(1, orderID);
-            ResultSet rs = stmt.executeQuery();
-            while (rs.next()) {
-                list.add(new Book(rs.getInt(1), rs.getString(2), rs.getBigDecimal(3),
-                        rs.getBigDecimal(4), rs.getInt(5), rs.getString(6)));
             }
             con.close();
             return list;
@@ -624,6 +602,24 @@ public class Book implements Serializable, DatabaseInfo {
         return null;
     }
 
+    public String getImageURLByBook(int bookID) {
+        String imgURL = null;
+        try (Connection con = getConnect()) {
+            PreparedStatement stmt = con.prepareStatement("""
+                                                          SELECT bi.ImageURL
+                                                                FROM BookInfo bi WHERE bi.BookID=?""");
+            stmt.setInt(1, bookID);
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                imgURL = rs.getString("imageURL");
+            }
+            con.close();
+        } catch (Exception ex) {
+            Logger.getLogger(Book.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return imgURL;
+    }
+
     public boolean addBook(Book book) {
         try (Connection con = getConnect()) {
             String query = "INSERT INTO BookInfo (publisherID, title, price, priceDiscount, pages, avaQuantity, publishDate, descriptions, longDescriptions, imageURL) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
@@ -788,11 +784,11 @@ public class Book implements Serializable, DatabaseInfo {
     public static void main(String[] args) {
         Book a = new Book();
 //        System.out.println(a.getListBook());
-        ArrayList<Book> bl = a.searchByName("hoàng");
-        for (Book b : bl) {
-            System.out.println(b);
-        }
+//        ArrayList<Book> bl = a.searchByName("hoàng");
+//        for (Book b : bl) {
+//            System.out.println(b);
+//        }
+System.out.println(a.getImageURLByBook(1));
     }
 
-  
 }

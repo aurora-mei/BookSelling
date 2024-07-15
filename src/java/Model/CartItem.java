@@ -161,7 +161,8 @@ public class CartItem implements Serializable, DatabaseInfo {
         }
         return null;
     }
-       public int getCartItemID(int userID,int bookID) {
+
+    public int getCartItemID(int userID, int bookID) {
         int c = 0;
         try (Connection con = getConnect()) {
             String query = """
@@ -173,7 +174,8 @@ public class CartItem implements Serializable, DatabaseInfo {
             stmt.setInt(2, bookID);
             ResultSet rs = stmt.executeQuery();
             while (rs.next()) {
-                c = rs.getInt(1);}
+                c = rs.getInt(1);
+            }
             con.close();
         } catch (Exception ex) {
             Logger.getLogger(Book.class.getName()).log(Level.SEVERE, null, ex);
@@ -218,7 +220,7 @@ public class CartItem implements Serializable, DatabaseInfo {
             stmt.setBigDecimal(5, cartItem.getPrice());
             stmt.setBigDecimal(6, cartItem.getPriceDiscount());
             stmt.executeUpdate();
-            id = getCartItemID(cartItem.getUserID(),cartItem.getBookID());
+            id = getCartItemID(cartItem.getUserID(), cartItem.getBookID());
 
         } catch (SQLException ex) {
             Logger.getLogger(CartItem.class.getName()).log(Level.SEVERE, null, ex);
@@ -256,6 +258,26 @@ public class CartItem implements Serializable, DatabaseInfo {
     public static void main(String[] args) {
         CartItem s = new CartItem(3, 10, 1, 2, new BigDecimal("18.99"), new BigDecimal("15.99"));
 
-        System.out.println(s.newCartItem(s));
+        System.out.println(s.noCartItemsByUserID(1));
     }
+
+    public int noCartItemsByUserID(int userID) {
+        int res = 0;
+        try (Connection con = getConnect()) {
+            PreparedStatement stmt = con.prepareStatement("""
+                                                           select count(CartItemID) as noCartItems
+                                                          from CartItem where userID = ?""");
+            stmt.setInt(1, userID);
+            ResultSet rc = stmt.executeQuery();
+            
+            while (rc.next()) {
+                res = rc.getInt(1);
+            }
+            con.close();
+        } catch (Exception ex) {
+            Logger.getLogger(CartItem.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return res;
+    }
+
 }

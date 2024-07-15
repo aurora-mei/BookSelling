@@ -95,6 +95,13 @@
                         <i class="fas fa-shopping-cart text-primary"></i>
                         <span class="badge">0</span>
                     </a>
+                    <c:choose>
+                        <c:when test="${sessionScope.userName != null}">
+                            <a href="BookAction?action=userProfile" class="btn border">
+                                <i class="fas fa-user text-primary"></i>
+                                <span class="badge"></span>
+                            </c:when>
+                        </c:choose>
                 </div>
             </div>
         </div>
@@ -184,21 +191,42 @@
         </div>
         <!-- Page Header End -->
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-        <script>
-                                function searchByKeyWord() {
-                                    var keyword = $('input[placeholder="Search books by title,year publish,description"]').val();
-                                    console.log("key word " + keyword);
-                                    if (keyword.length === 0) {
-                                        return;
-                                    }
-                                    var form = $('<form></form>').attr('action', 'BookAction').attr('method', 'get');
-                                    form.append($('<input>').attr('type', 'hidden').attr('name', 'action').attr('value', 'search'));
-                                    form.append($('<input>').attr('type', 'hidden').attr('name', 'by').attr('value', 'key'));
-                                    form.append($('<input>').attr('type', 'hidden').attr('name', 'keyword').attr('value', keyword));
-                                    // Append the form to the body and submit it
-                                    $('body').append(form);
-                                    form.submit();
+           <script>
+                            function searchByKeyWord() {
+                                var keyword = $('input[placeholder="Search books by title,year publish,description"]').val();
+                                console.log("key word " + keyword);
+                                if (keyword.length === 0) {
+                                    return;
                                 }
+                                var form = $('<form></form>').attr('action', 'BookAction').attr('method', 'get');
+                                form.append($('<input>').attr('type', 'hidden').attr('name', 'action').attr('value', 'search'));
+                                form.append($('<input>').attr('type', 'hidden').attr('name', 'by').attr('value', 'key'));
+                                form.append($('<input>').attr('type', 'hidden').attr('name', 'keyword').attr('value', keyword));
+                                // Append the form to the body and submit it
+                                $('body').append(form);
+                                form.submit();
+                            }
+                            $(document).ready(function () {
+                                calNoCartItems();
+
+                                function calNoCartItems() {
+                                    $.ajax({
+                                        url: "BookAction?action=calNoCartItems",
+                                        method: "GET",
+                                        success: function (response) {
+                                            if (response.trim() !== "") { // Check if response is not empty
+                                                $(".badge").first().text(response);
+                                                console.log("Cart items calculated successfully: " + response);
+                                            } else {
+                                                console.log("Empty response received or response is null.");
+                                            }
+                                        },
+                                        error: function (jqXHR, textStatus, errorThrown) {
+                                            console.error("Error occurred while calculating no cart items: " + textStatus, errorThrown);
+                                        }
+                                    });
+                                }
+                            });
 
         </script>
 
