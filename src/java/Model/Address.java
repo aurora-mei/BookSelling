@@ -9,6 +9,7 @@ import static Model.DatabaseInfo.DRIVERNAME;
 import static Model.DatabaseInfo.PASSDB;
 import static Model.DatabaseInfo.USERDB;
 import static Model.ShippingMethod.getConnect;
+import static Model.User.getConnect;
 import java.io.Serializable;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -33,6 +34,12 @@ public class Address implements Serializable, DatabaseInfo {
     // Parameterized constructor
     public Address(int addressID, String street, String buildingNo, String city) {
         this.addressID = addressID;
+        this.street = street;
+        this.buildingNo = buildingNo;
+        this.city = city;
+    }
+
+    public Address(String street, String buildingNo, String city) {
         this.street = street;
         this.buildingNo = buildingNo;
         this.city = city;
@@ -74,10 +81,11 @@ public class Address implements Serializable, DatabaseInfo {
         this.city = city;
     }
 
-  @Override
+    @Override
     public String toString() {
-        return "["+street +", "+buildingNo+", "+city+"]";
+        return "[" + street + ", " + buildingNo + ", " + city + "]";
     }
+
     public static Connection getConnect() {
         try {
             Class.forName(DRIVERNAME);
@@ -92,7 +100,75 @@ public class Address implements Serializable, DatabaseInfo {
         }
         return null;
     }
-        public ArrayList<Address> getListAddressByUserID(int userID) {
+
+    public ArrayList<Address> getListAddress() {
+        ArrayList<Address> list = new ArrayList<>();
+        try (Connection con = getConnect()) {
+            PreparedStatement stmt = con.prepareStatement("""
+                                                           select ai.AddressID,Street, BuildingNo, City
+                                                             FROM AddressInfo ai inner join UserAddress ua on ai.AddressID=ua.AddressID
+                                                             where ua.AddressStatus='A'""");
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                list.add(new Address(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4)));
+            }
+            con.close();
+            return list;
+        } catch (Exception ex) {
+            Logger.getLogger(Address.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
+    }
+
+    public int checkExistedAddress(String street, String buildingNo, String city) {
+        ArrayList<Address> list = getListAddress();
+        for (Address d : list) {
+            if (street.equals(d.getStreet()) && buildingNo.equals(d.getBuildingNo()) && city.equals(d.getCity())) {
+                return d.getAddressID();
+            }
+        }
+        return -1;
+    }
+
+    public int newAddress(Address ad, int userID) {
+        int adID = -1;
+        try (Connection con = getConnect()) {
+            int idExisted = checkExistedAddress(ad.getStreet(), ad.getBuildingNo(), ad.getCity());
+            if (idExisted == -1) {
+                String sql = """
+                     INSERT INTO AddressInfo (street, buildingNo, city)
+                     OUTPUT inserted.addressID
+                     VALUES (?, ?, ?)
+                     """;
+                PreparedStatement stmt = con.prepareStatement(sql);
+                stmt.setString(1, ad.getStreet());
+                stmt.setString(2, ad.getBuildingNo());
+                stmt.setString(3, ad.getCity());
+
+                ResultSet rs = stmt.executeQuery();
+                if (rs.next()) {
+                    adID = rs.getInt(1);
+                }
+            } else {
+                adID = idExisted;
+            }
+            String sql2 = """
+                     INSERT INTO UserAddress (userID, AddressID, addressStatus)
+                     VALUES (?, ?, ?)
+                     """;
+            PreparedStatement stmt2 = con.prepareStatement(sql2);
+            stmt2.setInt(1, userID);
+            stmt2.setInt(2, adID);
+            stmt2.setString(3, "A");
+            stmt2.executeUpdate();
+            con.close();
+        } catch (SQLException ex) {
+            Logger.getLogger(User.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return adID;
+    }
+
+    public ArrayList<Address> getListAddressByUserID(int userID) {
         ArrayList<Address> list = new ArrayList<>();
         try (Connection con = getConnect()) {
             PreparedStatement stmt = con.prepareStatement("""
@@ -102,7 +178,7 @@ public class Address implements Serializable, DatabaseInfo {
             stmt.setInt(1, userID);
             ResultSet rs = stmt.executeQuery();
             while (rs.next()) {
-                list.add(new Address(rs.getInt(1),rs.getString(1), rs.getString(2),rs.getString(3)));
+                list.add(new Address(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4)));
             }
             con.close();
             return list;
@@ -111,8 +187,14 @@ public class Address implements Serializable, DatabaseInfo {
         }
         return null;
     }
+
     public static void main(String[] args) {
-        Address a = new Address();
-        System.out.println(a.getListAddressByUserID(1));
+        Address a = new Address("Non Nuoc", "28 Billy", "Da Nang");
+//        System.out.println(a.getListAddress());
+        ArrayList<Address> l = a.getListAddress();
+        for(Address sa: l){
+            System.out.println(sa);
+        }
+        System.out.println(a.checkExistedAddress("73 Nguyen", "23B", "Da Nang"));
     }
 }

@@ -35,7 +35,7 @@
                         <tr>
                             <td style="width:30px;"><input class='add-order-item' type="checkbox" id="cart-${status.index}" style="width: 20px;" value="${cart.cartItemID}"> </td>
                             <td class="align-middle" style="display:flex;justify-content: space-between;align-items: center;">
-                                <img src="${b.imageURL}" alt="" style="width: 30px;"> 
+                                <a href="BookAction?action=bookShoppingTitle&title=${b.title}"><img src="${b.imageURL}" alt="" style="width: 30px;"></a> 
                                 <p style="font-size: 15px;">${b.title}</p>
                             </td>
                             <td class="align-middle">${languageName}</td>

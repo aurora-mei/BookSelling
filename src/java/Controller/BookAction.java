@@ -493,13 +493,24 @@ public class BookAction extends HttpServlet {
                     int quantity = Integer.parseInt(request.getParameter("quantity"));
 
                     CartItem cartI = new CartItem(userID, bookID, langID, quantity, price, priceDiscount);
-//                    System.out.println("cart item: "+cartI);
-                    int res = cartI.newCartItem(cartI);
-                    if (res > 0) {
-                        response.getWriter().write("success");
+                    int oldCartItemID = cartI.checkExistedCartItem(cartI, userID);
+                    CartItem oldCartItem = cartI.getCartItem(oldCartItemID);
+                    if (oldCartItemID > 0) {
+                        CartItem newCart = cartI.updateCartItemQuantity(oldCartItemID, oldCartItem.getQuantity() + cartI.getQuantity());
+                        if (newCart != null) {
+                            response.getWriter().write("success");
+                        } else {
+                            response.getWriter().write("error");
+                        }
                     } else {
-                        response.getWriter().write("error");
+                        int res = cartI.newCartItem(cartI);
+                        if (res > 0) {
+                            response.getWriter().write("success");
+                        } else {
+                            response.getWriter().write("error");
+                        }
                     }
+//                    System.out.println("cart item: "+cartI);
                 } catch (NumberFormatException e) {
                     out.println("<script> alert(\"" + e + "\");</script>");
                     out.println("<script> alert(\"Invalid number format!\");</script>");
@@ -752,6 +763,26 @@ public class BookAction extends HttpServlet {
                 } catch (MessagingException ex) {
                     System.out.println("Error occurred while sending email: " + ex.getMessage());
                     out.println("<script>alert(\"Sorry, it seems that our mail server is not responding. Please try again later!\");</script>");
+                }
+            }
+            case "newAddress" -> {
+                String street = request.getParameter("street");
+                String buildingNo = request.getParameter("buildingNo");
+                String city = request.getParameter("city");
+                Address nAdress = new Address(street, buildingNo, city);
+                HttpSession session = request.getSession(false);
+                int userID = (int) session.getAttribute("userID");
+                System.out.println("street: " + street + ", buiding no: " + buildingNo + ", city: " + city);
+                System.out.println("userID: " + userID);
+                if (!street.isEmpty() && !buildingNo.isEmpty() && !city.isEmpty()) {
+                    int res = nAdress.newAddress(nAdress, userID);
+                    if (res >= 0) {
+                        response.getWriter().write("success"); // Gửi lại response cho AJAX
+                    } else {
+                        response.getWriter().write("error");
+                    }
+                } else {
+                    response.getWriter().write("fill first");
                 }
             }
         }

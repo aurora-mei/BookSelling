@@ -204,6 +204,15 @@ public class CartItem implements Serializable, DatabaseInfo {
         }
         return null;
     }
+    public int checkExistedCartItem(CartItem c,int userID){
+         ArrayList<CartItem> list =c.getListCartItem(userID);
+         for(CartItem ca:list){
+             if(c.getBookID()==ca.getBookID()&&c.getLanguageID()==ca.getLanguageID()){
+                 return ca.getCartItemID();
+             }
+         }
+         return -1;
+    }
 
     public int newCartItem(CartItem cartItem) {
         int id = -1;

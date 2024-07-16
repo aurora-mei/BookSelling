@@ -50,7 +50,7 @@ public class LoginGoogleHandler extends HttpServlet {
         System.out.println(u.checkExistedEmail(user.getEmail()));
         if (u.checkExistedEmail(user.getEmail()) == null) {
             int newU = u.newUserGoogle(user);
-            System.out.println(u.newUserGoogle(user));
+            System.out.println("new id user: "+ newU);
             if (newU > 0) {
                 try {
                     u = u.loginByEmail(user.getEmail());
@@ -71,7 +71,7 @@ public class LoginGoogleHandler extends HttpServlet {
                     }
                 } else {
                      PrintWriter out = response.getWriter();
-                    out.println("<script> alert(\"User name or password is invalid!\");</script>");
+                    out.println("<script> alert(\"Login failed!\");</script>");
                     request.setAttribute("nameJSP", "loginForm");
                     request.getRequestDispatcher("authenticate.jsp").include(request, response);
                 }
@@ -79,7 +79,7 @@ public class LoginGoogleHandler extends HttpServlet {
         }else{
             System.out.println("user existed");
             User nU = u.getUserByEmail(user.getEmail());
-             nU = u.login(nU.getUserName());
+             nU = u.loginByEmail(nU.getEmail());
              if (nU != null ) {
                     HttpSession newSession = request.getSession(true);
                     newSession.setMaxInactiveInterval(600 * 60);

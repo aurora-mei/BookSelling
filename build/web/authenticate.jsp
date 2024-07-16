@@ -108,7 +108,7 @@
                         <input type="password" name="pwd" placeholder="Password" required>
                         <input type="submit" value="Login">
                          <a href="https://accounts.google.com/o/oauth2/auth?scope=profile%20email%20openid&redirect_uri=http://localhost:8080/BookWeb/LoginGoogleHandler&response_type=code
-		   &client_id=your_key&approval_prompt=force">Login With Google</a>
+		   &client_id=424389669678-6l5qbh3nq2binmkk7edchhj93fu5kvci.apps.googleusercontent.com&approval_prompt=force">Login With Google</a>
                         <div class="register-link"> 
                             <span style="font-style: italic;font-size: 85%;">First time to Kittens Shop?</span> 
                             <a href="Authenticate?action=registerForm">Register</a>

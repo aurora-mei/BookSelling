@@ -176,11 +176,11 @@
                             </div>
                             <div class="navbar-nav ml-auto py-0 ">
                                 <c:choose>
-                                    <c:when test="${sessionScope.userName != null}">
+                                    <c:when test="${sessionScope.user != null}">
                                         <a href="Authenticate?action=logout"
                                            class="nav-item nav-link">Logout</a>
                                     </c:when>
-                                    <c:when test="${sessionScope.userName == null}">
+                                    <c:when test="${sessionScope.user == null}">
                                         <a href="Authenticate?action=loginForm"
                                            class="nav-item nav-link">Login</a>
                                     </c:when>

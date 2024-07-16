@@ -288,7 +288,7 @@ public class User implements Serializable, DatabaseInfo {
             PreparedStatement stmt = con.prepareStatement(sql);
             stmt.setString(1, "user");
             stmt.setString(2, u.getEmail());
-            stmt.setString(3, u.getFamily_name() + u.getGiven_name());
+            stmt.setString(3, u.getFamily_name() +" "+ u.getGiven_name());
             stmt.setString(4, u.getPicture());
 
             ResultSet rs = stmt.executeQuery();
@@ -424,6 +424,6 @@ public class User implements Serializable, DatabaseInfo {
 
     public static void main(String[] args) throws Exception {
         User s = new User("ad", "123", "", "huyen@gmail.com", "1234567890", "thanh", Date.valueOf("2022-10-01"), "female", "de.jpg");
-        System.out.println(s.checkExistedEmail("mei@gmail.com"));
+        System.out.println(s.checkExistedEmail("meicao.v@gmail.com"));
     }
 }
