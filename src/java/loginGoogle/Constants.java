@@ -15,9 +15,9 @@ package loginGoogle;
  */
 public class Constants {
 
-//	public static String GOOGLE_CLIENT_ID = "424389669678-6l5qbh3nq2binmkk7edchhj93fu5kvci.apps.googleusercontent.com";
+	public static String GOOGLE_CLIENT_ID = "y_key";
 
-//	public static String GOOGLE_CLIENT_SECRET = "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";
+	public static String GOOGLE_CLIENT_SECRET = "y_key";
 
 	public static String GOOGLE_REDIRECT_URI = "http://localhost:8080/BookWeb/LoginGoogleHandler";
 
