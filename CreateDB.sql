@@ -243,7 +243,7 @@ VALUES
     (N'NXB Kim Đồng', 'kimdong@gmail.com'),
     (N'NXB Trẻ', 'tre@gmail.com'),
     (N'NXB Nhã Nam', 'nhanam@gmail.com');
-	select * from Publisher
+	select * from Users
 -- Insert data into Users table
 INSERT INTO Users ( UserName, Passwords, Roles, Email, PhoneNum, Names, DOB, Gender, Avatar)
 VALUES 
@@ -272,7 +272,8 @@ VALUES
 
 -- Insert data into UserAddress table
 INSERT INTO UserAddress ( UserID, AddressID, AddressStatus)
-VALUES ( 1, 5, 'A'),
+VALUES ( 10, 5, 'A'),
+( 1, 5, 'A'),
 ( 1, 1, 'A'),
 ( 2, 4, 'A'),
 ( 2, 3, 'NA'),
@@ -289,8 +290,23 @@ VALUES
     (N'Vượt Bẫy Cảm Xúc', 3, 19.99, 300, 100, '2023-05-15','images/sale1.jpg', 'A thrilling fiction novel about adventures.', 'This novel takes readers on an emotional journey through the highs and lows of life. The protagonist faces various challenges that test their resilience and strength. Through their experiences, readers gain insight into the power of emotions and the importance of self-awareness. The narrative is filled with gripping moments and thought-provoking reflections. It is a story of personal growth and transformation, highlighting the importance of embracing one''s emotions. The book encourages readers to face their fears and pursue their dreams.'),
     (N'Bước Nhảy Tới Mùa Hè', 2, 29.99, 450, 75, '2022-10-20','images/sale41.jpg', 'A comprehensive guide to SQL databases.', 'This book offers step-by-step tutorials and real-world examples for mastering SQL. It covers everything from basic queries to advanced techniques. Readers will learn how to design, implement, and optimize SQL databases. The book also includes tips on troubleshooting and best practices for database management. With clear explanations and practical exercises, it is a valuable resource for both beginners and experienced professionals. The author''s expertise and experience shine through in this comprehensive guide.'),
     (N'Cảm Ơn Người Lớn', 1, 14.50, 200, 120, '2024-01-08','images/sale33.jpg', 'An exploration of modern scientific discoveries.', 'This book takes readers on a journey through the latest advancements in various scientific fields. It covers groundbreaking research and technological innovations. The author explains complex concepts in a way that is accessible to a broad audience. Through detailed descriptions and real-world examples, readers gain a deeper understanding of how science is transforming our world. The book also explores the ethical implications of scientific progress. It is a must-read for anyone interested in the future of science and technology.');
+		INSERT INTO ImageInfo (ImageURL) VALUES 
+	('images/sale36.jpg'),--mắt biếc
+	('images/sale46.jpg');--Chân Lý Và Sự Thật
+	INSERT INTO ImageInfo (ImageURL) VALUES 
+	('images/sale47.jpg'),--Yêu, Cần Phải Học
+	('images/sale41.jpg');--Bước Nhảy Tới Mùa Hè
+	INSERT INTO ImageInfo (ImageURL) VALUES 
+	('images/sale33.jpg');--Cảm Ơn Người Lớn
+	select * from ImageInfo
+INSERT INTO BookImage (BookID, ImageID) VALUES 
+    ((SELECT BookID FROM BookInfo WHERE Title = N'Mắt Biếc'), (SELECT ImageID FROM ImageInfo WHERE ImageURL = N'images/sale36.jpg')),
+    ((SELECT BookID FROM BookInfo WHERE Title = N'Chân Lý Và Sự Thật'), (SELECT ImageID FROM ImageInfo WHERE ImageURL = N'images/sale46.jpg')),
+    ((SELECT BookID FROM BookInfo WHERE Title = N'Yêu, Cần Phải Học'), (SELECT ImageID FROM ImageInfo WHERE ImageURL = N'images/sale47.jpg')),
+	((SELECT BookID FROM BookInfo WHERE Title = N'Bước Nhảy Tới Mùa Hè'), (SELECT ImageID FROM ImageInfo WHERE ImageURL = N'images/sale41.jpg')),
+	((SELECT BookID FROM BookInfo WHERE Title = N'Cảm Ơn Người Lớn'), (SELECT ImageID FROM ImageInfo WHERE ImageURL = N'images/sale33.jpg'));
+	select * from CartItem
 
-	--delete BookImage
 	INSERT INTO BookLanguageInfo (LanguageName)
 VALUES 
     ('English'),
@@ -307,6 +323,16 @@ VALUES
     (2, 3), -- BookID 2 is available in Spanish
     (2, 4), -- BookID 2 is also available in German
     (3, 5); -- BookID 3 is available in Chinese
+
+INSERT INTO BookLanguage (BookID, LanguageID)
+VALUES 
+	(4, 1),
+	(4, 4),
+    (6, 1), -- BookID 1 is available in English
+    (6, 2), -- BookID 1 is also available in French
+    (7, 3), -- BookID 2 is available in Spanish
+    (7, 4); -- BookID 2 is also available in German
+
 	select * from BookLanguage
 	-- Step 1: Insert Image URLs into ImageInfo table
 INSERT INTO ImageInfo (ImageURL) VALUES 
@@ -316,6 +342,8 @@ INSERT INTO ImageInfo (ImageURL) VALUES
 	('images/sale4.jpg'),--hoàng tử bé
     ('images/sale54.jpg'),
     ('images/sale55.jpg');
+
+
 	select * from ImageInfo
 -- Step 2: Insert BookIDs and ImageIDs into BookImage table
 INSERT INTO BookImage (BookID, ImageID) VALUES 
@@ -325,6 +353,18 @@ INSERT INTO BookImage (BookID, ImageID) VALUES
     (5, 1), 
     (5, 2), 
     (5, 3); 
+	INSERT INTO Comment (BookID, UserID, Comment, Rating, CommentDate) 
+                     OUTPUT inserted.CommentID
+                     VALUES (?, ?, ?, ?, ?)
+INSERT INTO Comment (BookID, UserID, Comment, Rating, CommentDate) 
+VALUES
+    (1, 1, 'A timeless classic that everyone should read.', 5, '2024-05-08'),
+    (2, 2, 'A thought-provoking exploration of truth and justice.', 4.5, '2024-04-08'),
+    (3, 1, 'Very insightful and thought-provoking.', 5, '2024-07-08'),
+    (4, 3, 'Great tips on understanding and practicing love.', 4, '2024-11-08'),
+    (5, 2, 'An emotional rollercoaster of a book.', 4.5, '2024-06-08'),
+    (6, 2, 'Very detailed and useful guide on SQL databases.', 5, '2024-03-08'),
+    (7, 3, 'Fascinating insights into modern scientific discoveries.', 4, '2024-05-08');
 
 INSERT INTO Comment (BookID, UserID, Comment, Rating,CommentDate) VALUES
     (1, 1, 'A timeless classic that everyone should read.', 5,'2024-05-08'),
@@ -398,6 +438,24 @@ VALUES
 ('Clamp', '1989-04-01', 'clamp@example.com', 'Japanese manga artist team', 'images/author3.jpg'),
 ('Antoine de Saint-Exupéry', '1900-06-29', 'exupery@example.com', 'French writer and aviator', 'images/author4.jpg'),
 ('Susan David', '1970-09-13', 'susandavid@example.com', 'Psychologist and author', 'images/author5.jpg');
+ INSERT INTO Author (AuthorName, AuthorDOB, AuthorEmail, AuthorDescript, AuthorImageURL)
+VALUES
+    (N'Trang Thủy', '1980-03-15', 'trangthuy@gmail.com', 'A talented Vietnamese author known for capturing the essence of rural life and love.', 'images/authors/trangthuy.jpg'),
+    (N'Lê Minh', '1975-08-21', 'leminh@gmail.com', 'An insightful political analyst and philosopher.', 'images/authors/leminh.jpg'),
+    (N'Hoàng Mai', '1982-05-10', 'hoangmai@gmail.com', 'A relationship expert specializing in love and emotional well-being.', 'images/authors/hoangmai.jpg'),
+    (N'Tuấn Vũ', '1990-11-30', 'tuanvu@gmail.com', 'A fiction writer known for his gripping narratives and emotional depth.', 'images/authors/tuanvu.jpg'),
+    (N'Đức Thịnh', '1985-06-25', 'ducthinh@gmail.com', 'An experienced SQL database administrator and educator.', 'images/authors/ducthinh.jpg'),
+    (N'Tâm Tít', '1978-09-12', 'tamtit@gmail.com', 'A science writer exploring the frontiers of modern scientific discoveries.', 'images/authors/tamtit.jpg');
+	 
+		INSERT INTO BookAuthor (BookID, AuthorID)
+VALUES 
+    ((SELECT BookID FROM BookInfo WHERE Title = N'Mắt Biếc'), (SELECT AuthorID FROM Author WHERE AuthorName = N'Trang Thủy')),
+    ((SELECT BookID FROM BookInfo WHERE Title = N'Chân Lý Và Sự Thật'), (SELECT AuthorID FROM Author WHERE AuthorName = N'Lê Minh')),
+    ((SELECT BookID FROM BookInfo WHERE Title = N'Yêu, Cần Phải Học'), (SELECT AuthorID FROM Author WHERE AuthorName = N'Hoàng Mai')),
+    ((SELECT BookID FROM BookInfo WHERE Title = N'Vượt Bẫy Cảm Xúc'), (SELECT AuthorID FROM Author WHERE AuthorName = N'Tuấn Vũ')),
+    ((SELECT BookID FROM BookInfo WHERE Title = N'Bước Nhảy Tới Mùa Hè'), (SELECT AuthorID FROM Author WHERE AuthorName = N'Đức Thịnh')),
+    ((SELECT BookID FROM BookInfo WHERE Title = N'Cảm Ơn Người Lớn'), (SELECT AuthorID FROM Author WHERE AuthorName = N'Tâm Tít'));
+
 
 -- Books by Nguyễn Nhật Ánh
 INSERT INTO BookInfo (Title, PublisherID, Price, Pages, AvaQuantity, PublishDate, ImageURL, Descriptions, LongDescriptions)
@@ -412,6 +470,8 @@ VALUES
     ('Kimi ni Todoke Vol.1', 2, 15.99, 180, 200, '2006-05-10', 'images/kiminitodoke1.jpg', 'A heartwarming story of friendship and love.', 'Kimi ni Todoke follows the life of Sawako Kuronuma, who is often misunderstood because of her resemblance to the horror movie character Sadako. However, her life changes when she befriends the popular boy, Shota Kazehaya.'),
     ('Crazy For You', 2, 16.99, 190, 180, '2003-02-13', 'images/crazyforyou1.jpg', 'A story of complicated teenage love.', 'Crazy For You is a manga that explores the emotional highs and lows of teenage love and relationships. The main character navigates her feelings and the complexities of growing up.'),
     ('Kimi ni Todoke Vol.2', 2, 17.99, 200, 170, '2008-09-26', 'images/kiminitodoke2.jpg', 'A romantic journey of self-discovery and love.', 'This manga continues the story of Sawako Kuronuma, a high school girl often misunderstood because of her resemblance to the horror film character Sadako. In this volume, Sawako starts to open up more to her classmates and develops deeper relationships, particularly with Shouta Kazehaya. The themes of self-discovery, overcoming social anxiety, and developing friendships and romance are beautifully illustrated. It’s a heartwarming tale that resonates with readers through its portrayal of personal growth and love.');
+	SELECT bi.ImageURL
+     FROM BookInfo bi WHERE bi.BookID=?
 
 -- Assuming PublisherID for Bloomsbury (or any relevant publisher) is 1
 INSERT INTO BookInfo (Title, PublisherID, Price, Pages, AvaQuantity, PublishDate, ImageURL, Descriptions, LongDescriptions)
@@ -488,6 +548,15 @@ VALUES
     ((SELECT BookID FROM BookInfo WHERE Title = 'Emotional Agility'), (SELECT AuthorID FROM Author WHERE AuthorName = 'Susan David')),
     ((SELECT BookID FROM BookInfo WHERE Title = 'The Gifts of Imperfection'), (SELECT AuthorID FROM Author WHERE AuthorName = 'Susan David')),
     ((SELECT BookID FROM BookInfo WHERE Title = 'Rising Strong'), (SELECT AuthorID FROM Author WHERE AuthorName = 'Susan David'));
+--for first 7 book
+	INSERT INTO BookAuthor (BookID, AuthorID)
+VALUES 
+    ((SELECT BookID FROM BookInfo WHERE Title = N'Mắt Biếc'), (SELECT AuthorID FROM Author WHERE AuthorName = N'Trang Thủy')),
+    ((SELECT BookID FROM BookInfo WHERE Title = N'Chân Lý Và Sự Thật'), (SELECT AuthorID FROM Author WHERE AuthorName = N'Lê Minh')),
+    ((SELECT BookID FROM BookInfo WHERE Title = N'Yêu, Cần Phải Học'), (SELECT AuthorID FROM Author WHERE AuthorName = N'Hoàng Mai')),
+    ((SELECT BookID FROM BookInfo WHERE Title = N'Vượt Bẫy Cảm Xúc'), (SELECT AuthorID FROM Author WHERE AuthorName = N'Tuấn Vũ')),
+    ((SELECT BookID FROM BookInfo WHERE Title = N'Bước Nhảy Tới Mùa Hè'), (SELECT AuthorID FROM Author WHERE AuthorName = N'Đức Thịnh')),
+    ((SELECT BookID FROM BookInfo WHERE Title = N'Cảm Ơn Người Lớn'), (SELECT AuthorID FROM Author WHERE AuthorName = N'Tâm Tít'));
 
 INSERT INTO CartItem (UserID, BookID, LanguageID, Quantity, Price,PriceDiscount) VALUES
 (2, 5,4, 2, 31.98,19.2),
@@ -534,6 +603,7 @@ VALUES
 (4, 1,'1000066666777782', '2025-12-31');
 INSERT INTO Cards (PaymentMethodID, UserID,CardCode, ExpireDates) 
 VALUES 
+(4, 10,'1000066666779983', '2025-12-22'),
 (1, 1,'1000066666777783', '2025-12-22'),
 (1, 1,'1003466666777706', '2025-12-05'),
 (4, 1,'1003466666777707', '2025-10-31'),
@@ -553,10 +623,12 @@ INSERT INTO VoucherOrder (VoucherCode, VoucherValue) VALUES
 --drop table Discount
 --drop table OrderItem
 
- UPDATE OrderItem 
-SET OrderID = null
-WHERE OrderID =17
-Delete Orders where orderID in (15,16,17)
+ SELECT LanguageName FROM BookLanguageInfo bl inner join OrderItem oi on bl.LanguageID=oi.LanguageID
+  WHERE oi.OrderItemID=20
+
+select count(CartItemID) as noCartItems
+from CartItem where userID = 10
+
 
 delete OrderItem
 delete Orders
