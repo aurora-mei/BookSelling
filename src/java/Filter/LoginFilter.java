@@ -46,7 +46,7 @@ public class LoginFilter implements Filter {
         String action = req.getParameter("action");
         HttpSession session = req.getSession(false);
 
-        if (session == null || session.getAttribute("userName") == null || session.getAttribute("user") == null) {
+        if (session == null || session.getAttribute("user") == null) {
             if (!"bookShoppingImg".equals(action) && !"bookShoppingTitle".equals(action)
                     && !"filter".equals(action) 
                     && !"search".equals(action)

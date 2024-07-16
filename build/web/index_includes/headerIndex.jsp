@@ -100,7 +100,7 @@
                         <span class="badge"></span>
                     </a>
                     <c:choose>
-                        <c:when test="${sessionScope.userName != null}">
+                        <c:when test="${sessionScope.user != null}">
                             <a href="BookAction?action=userProfile" class="btn border">
                                 <i class="fas fa-user text-primary"></i>
                                 <span class="badge"></span>
@@ -115,8 +115,8 @@
 
         <!-- Navbar Start -->
 <!--        <div class="container-fluid">
-            <div class="row border-top px-xl-5">
-                                <div class="col-lg-3 d-none d-lg-block">
+            <div class="row border-top px-xl-5">-->
+<!--                                <div class="col-lg-3 d-none d-lg-block">
                             <a class="btn shadow-none d-flex align-items-center justify-content-between bg-primary text-white w-100" data-toggle="collapse" href="#navbar-vertical" style="height: 65px; margin-top: -1px; padding: 0 30px;">
                                 <h6 class="m-0">Categories</h6>
                                 <i class="fa fa-angle-down text-dark"></i>
@@ -142,8 +142,8 @@
                                     <a href="" class="nav-item nav-link">Shoes</a>
                                 </div>
                             </nav>
-                        </div>
-                <div class="col-lg-9">
+                        </div>-->
+<!--                <div class="col-lg-9">
                     <nav class="navbar navbar-expand-lg bg-light navbar-light py-3 py-lg-0 px-0">
                         <a href="" class="text-decoration-none d-block d-lg-none">
                             <h1 class="m-0 display-5 font-weight-semi-bold"><span class="text-primary font-weight-bold border px-3 mr-1">Kittens Bookstore</span></h1>
@@ -172,11 +172,11 @@
                             </div>
                             <div class="navbar-nav ml-auto py-0 ">
                                 <c:choose>
-                                    <c:when test="${sessionScope.userName != null}">
+                                    <c:when test="${sessionScope.user != null}">
                                         <a href="Authenticate?action=logout"
                                            class="nav-item nav-link">Logout</a>
                                     </c:when>
-                                    <c:when test="${sessionScope.userName == null}">
+                                    <c:when test="${sessionScope.user == null}">
                                         <a href="Authenticate?action=loginForm"
                                            class="nav-item nav-link">Login</a>
                                     </c:when>
@@ -186,8 +186,8 @@
                     </nav>
                 </div>
             </div>
-        </div>-->
-        <!-- Navbar End -->
+        </div>
+         Navbar End -->
 
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
            <script>

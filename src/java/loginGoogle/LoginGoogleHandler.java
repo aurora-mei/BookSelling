@@ -45,9 +45,12 @@ public class LoginGoogleHandler extends HttpServlet {
         String code = request.getParameter("code");
         String accessToken = getToken(code);
         UserGoogleDto user = getUserInfo(accessToken);
+        System.out.println(user);
         User u = new User();
+        System.out.println(u.checkExistedEmail(user.getEmail()));
         if (u.checkExistedEmail(user.getEmail()) == null) {
             int newU = u.newUserGoogle(user);
+            System.out.println(u.newUserGoogle(user));
             if (newU > 0) {
                 try {
                     u = u.loginByEmail(user.getEmail());
@@ -74,6 +77,7 @@ public class LoginGoogleHandler extends HttpServlet {
                 }
             }
         }else{
+            System.out.println("user existed");
             User nU = u.getUserByEmail(user.getEmail());
              nU = u.login(nU.getUserName());
              if (nU != null ) {

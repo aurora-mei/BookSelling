@@ -578,10 +578,10 @@
                                         <!--<a href="Authenticate?action=loginForm" class="nav-item nav-link">Login</a>-->
                                         <!--<a href="Authenticate?action=registerForm" class="nav-item nav-link">Register</a>-->
                                         <c:choose>
-                                            <c:when test="${sessionScope.userName != null}">
+                                            <c:when test="${sessionScope.user != null}">
                                                 <a href="Authenticate?action=logout" class="nav-item nav-link">Logout</a>
                                             </c:when>      
-                                            <c:when test="${sessionScope.userName == null}">
+                                            <c:when test="${sessionScope.user == null}">
                                                 <a href="Authenticate?action=loginForm" class="nav-item nav-link">Login</a>
                                             </c:when> 
                                         </c:choose>

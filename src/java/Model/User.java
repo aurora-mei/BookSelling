@@ -2,12 +2,11 @@ package Model;
 
 import java.io.Serializable;
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Date;
-import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -122,7 +121,7 @@ public class User implements Serializable, DatabaseInfo {
 
     public String getDob() {
         if (this.dob != null) {
-            DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+            SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
             return df.format(this.dob);
         } else {
             return null;
@@ -130,12 +129,16 @@ public class User implements Serializable, DatabaseInfo {
     }
 
     public void setDob(String dob) {
-        SimpleDateFormat sd = new SimpleDateFormat("yyyy-MM-dd");
-        try {
-            this.dob = new java.sql.Date(sd.parse(dob).getTime());
-        } catch (ParseException ex) {
-            Logger.getLogger(User.class.getName()).log(Level.SEVERE, null, ex);
-            throw new RuntimeException("Invalid BD");
+        if (dob != null && !dob.isEmpty()) {
+            SimpleDateFormat sd = new SimpleDateFormat("yyyy-MM-dd");
+            try {
+                this.dob = new java.sql.Date(sd.parse(dob).getTime());
+            } catch (ParseException ex) {
+                Logger.getLogger(User.class.getName()).log(Level.SEVERE, null, ex);
+                throw new RuntimeException("Invalid DOB");
+            }
+        } else {
+            this.dob = null;
         }
     }
 
@@ -217,7 +220,8 @@ public class User implements Serializable, DatabaseInfo {
         }
         return s;
     }
-        public User loginByEmail(String email) throws Exception {
+
+    public User loginByEmail(String email) throws Exception {
         User s = null;
         try (Connection con = getConnect()) {
             PreparedStatement stmt = con.prepareStatement("SELECT UserID, UserName, Passwords, Roles, Email, PhoneNum, Names, DOB, Gender, Avatar FROM Users WHERE Email=?");
@@ -375,7 +379,10 @@ public class User implements Serializable, DatabaseInfo {
                 user.setEmail(rs.getString("Email"));
                 user.setPhoneNum(rs.getString("PhoneNum"));
                 user.setName(rs.getString("Names"));
-                user.setDob(rs.getString("DOB"));
+                String dob = rs.getString("DOB");
+                if (dob != null) {
+                    user.setDob(dob);
+                }
                 user.setGender(rs.getString("Gender"));
                 user.setAvatar(rs.getString("Avatar"));
 
@@ -385,17 +392,17 @@ public class User implements Serializable, DatabaseInfo {
 
         return users;
     }
-       public User getUserByEmail(String email) throws SQLException {
-        User users = new User();
+
+    public User getUserByEmail(String email) throws SQLException {
+        User user = null;
 
         try (Connection con = getConnect()) {
-            
-            PreparedStatement stmt = con.prepareStatement("SELECT * FROM Users where email=?");
+            PreparedStatement stmt = con.prepareStatement("SELECT * FROM Users WHERE email=?");
             stmt.setString(1, email);
             ResultSet rs = stmt.executeQuery();
 
-            while (rs.next()) {
-                User user = new User();
+            if (rs.next()) {
+                user = new User();
                 user.setUserID(rs.getInt("UserID"));
                 user.setUserName(rs.getString("UserName"));
                 user.setPassword(rs.getString("Passwords")); // Note: Passwords from your schema
@@ -403,22 +410,20 @@ public class User implements Serializable, DatabaseInfo {
                 user.setEmail(rs.getString("Email"));
                 user.setPhoneNum(rs.getString("PhoneNum"));
                 user.setName(rs.getString("Names"));
-                user.setDob(rs.getString("DOB"));
+                String dob = rs.getString("DOB");
+                if (dob != null) {
+                    user.setDob(dob);
+                }
                 user.setGender(rs.getString("Gender"));
                 user.setAvatar(rs.getString("Avatar"));
             }
         }
 
-        return users;
+        return user;
     }
-
 
     public static void main(String[] args) throws Exception {
-        // Đối tượng Date được tạo bằng cách sử dụng phương thức Date.valueOf("YYYY-MM-DD")
-        // Giá trị thời gian là một ngày cụ thể
-
         User s = new User("ad", "123", "", "huyen@gmail.com", "1234567890", "thanh", Date.valueOf("2022-10-01"), "female", "de.jpg");
-        System.out.println(s.loginByEmail("huyenhyomin@gmail.com"));
+        System.out.println(s.checkExistedEmail("mei@gmail.com"));
     }
-
 }
