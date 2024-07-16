@@ -17,7 +17,8 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Date;
+import java.sql.Date;
+import java.time.LocalDate;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -44,51 +45,58 @@ public class Comment implements Serializable, DatabaseInfo {
         this.commentDate = commentDate;
     }
 
+    public Comment(int bookID, int userID, String comment, BigDecimal rating) {
+        this.bookID = bookID;
+        this.userID = userID;
+        this.comment = comment;
+        this.rating = rating;
+    }
+
     // Getters and setters
     public int getCommentID() {
         return commentID;
     }
-    
+
     public void setCommentID(int commentID) {
         this.commentID = commentID;
     }
-    
+
     public int getBookID() {
         return bookID;
     }
-    
+
     public void setBookID(int bookID) {
         this.bookID = bookID;
     }
-    
+
     public int getUserID() {
         return userID;
     }
-    
+
     public void setUserID(int userID) {
         this.userID = userID;
     }
-    
+
     public String getComment() {
         return comment;
     }
-    
+
     public void setComment(String comment) {
         this.comment = comment;
     }
-    
+
     public BigDecimal getRating() {
         return rating;
     }
-    
+
     public void setRating(BigDecimal rating) {
         this.rating = rating;
     }
-    
+
     public Date getCommentDate() {
         return commentDate;
     }
-    
+
     public void setCommentDate(Date commentDate) {
         this.commentDate = commentDate;
     }
@@ -146,7 +154,8 @@ public class Comment implements Serializable, DatabaseInfo {
         }
         return s;
     }
-     public BigDecimal getAverageRating(int bookID) {
+
+    public BigDecimal getAverageRating(int bookID) {
         BigDecimal s = new BigDecimal("0");
         try (Connection con = getConnect()) {
             PreparedStatement stmt = con.prepareStatement("""
@@ -165,7 +174,8 @@ public class Comment implements Serializable, DatabaseInfo {
         }
         return s;
     }
-         public int noReviewsByBookID(int bookID) {
+
+    public int noReviewsByBookID(int bookID) {
         int res = -1;
         try (Connection con = getConnect()) {
             PreparedStatement stmt = con.prepareStatement("""
@@ -173,7 +183,7 @@ public class Comment implements Serializable, DatabaseInfo {
                                                            	from Comment where BookID= ?""");
             stmt.setInt(1, bookID);
             ResultSet rc = stmt.executeQuery();
-            
+
             while (rc.next()) {
                 res = rc.getInt(1);
             }
@@ -182,6 +192,30 @@ public class Comment implements Serializable, DatabaseInfo {
             Logger.getLogger(CartItem.class.getName()).log(Level.SEVERE, null, ex);
         }
         return res;
+    }
+
+    public int newComment(Comment com) {
+        int id = -1;
+        try (Connection con = getConnect()) {
+            String sql = """
+                     	INSERT INTO Comment (BookID, UserID, Comment, Rating, CommentDate) 
+                                          OUTPUT inserted.CommentID
+                                          VALUES (?, ?, ?, ?, ?)
+                     """;
+            PreparedStatement stmt = con.prepareStatement(sql);
+            stmt.setInt(1, com.getBookID());
+            stmt.setInt(2, com.getUserID());
+            stmt.setString(3, com.getComment());
+            stmt.setBigDecimal(4, com.getRating());
+            stmt.setDate(5, java.sql.Date.valueOf(LocalDate.now()));
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                id = rs.getInt(1);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(User.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return id;
     }
 
     public static void main(String[] args) {

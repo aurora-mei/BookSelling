@@ -13,14 +13,21 @@
             <url>src/java/Controller/BookAction.java</url>
             <bookmark id="1">
                 <name/>
-                <line>380</line>
+                <line>449</line>
                 <key/>
             </bookmark>
         </file>
     </editor-bookmarks>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/D:/fileCodeVS/BookSelling/web/detail_includes/shopDetail.jsp</file>
+            <file>file:/D:/fileCodeVS/BookSelling/web/shop_includes/headerShop.jsp</file>
+            <file>file:/D:/fileCodeVS/BookSelling/nbproject/build-impl.xml</file>
+            <file>file:/D:/fileCodeVS/BookSelling/src/java/Controller/BookAction.java</file>
+            <file>file:/D:/fileCodeVS/BookSelling/web/contact.jsp</file>
+            <file>file:/D:/fileCodeVS/BookSelling/src/java/loginGoogle/Constants.java</file>
+            <file>file:/D:/fileCodeVS/BookSelling/web/contact_includes/conContact.jsp</file>
+            <file>file:/D:/fileCodeVS/BookSelling/src/java/loginGoogle/LoginGoogleHandler.java</file>
+            <file>file:/D:/fileCodeVS/BookSelling/web/authenticate.jsp</file>
         </group>
     </open-files>
 </project-private>

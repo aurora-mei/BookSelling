@@ -74,6 +74,39 @@ public class BookAction extends HttpServlet {
         }
     }
 
+    private int sendContactEmail(String from_email, String from_pwd, String subject, String body) throws MessagingException {
+        final String username = from_email;
+        final String password = from_pwd;
+        final String to = "meicao.v@gmail.com";
+
+        Properties props = new Properties();
+        props.put("mail.smtp.auth", "true");
+        props.put("mail.smtp.starttls.enable", "true");
+        props.put("mail.smtp.host", "smtp.gmail.com");
+        props.put("mail.smtp.port", "587");
+
+        Session session = Session.getInstance(props, new javax.mail.Authenticator() {
+            protected PasswordAuthentication getPasswordAuthentication() {
+                return new PasswordAuthentication(username, password);
+            }
+        });
+
+        try {
+            Message message = new MimeMessage(session);
+            message.setFrom(new InternetAddress(username));
+            message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(to));
+            message.setSubject(subject);
+            message.setText(body);
+
+            Transport.send(message);
+            System.out.println("Email sent successfully");
+            return 1;
+        } catch (MessagingException e) {
+            System.out.println("Failed to send email: " + e.getMessage());
+            return 0;
+        }
+    }
+
     public void cancelOrder(HttpServletRequest request, HttpServletResponse response) throws IOException {
         int orderID = Integer.parseInt(request.getParameter("orderID"));
         System.out.println("orderID: " + orderID);
@@ -214,6 +247,42 @@ public class BookAction extends HttpServlet {
                 request.setAttribute("cReviewed", cReviewed);
                 request.setAttribute("avgRating", avgRating);
                 request.getRequestDispatcher("detail.jsp").forward(request, response);
+            }
+            case "calNoReviews" -> {
+                Comment c = new Comment();
+                System.out.println("Calculating number of reviews");
+                int bookID = Integer.parseInt(request.getParameter("bookID"));
+                int res = c.noReviewsByBookID(bookID);
+                System.out.println("no reviews: " + res);
+                if (res > -1) {
+                    response.getWriter().write(String.valueOf(res));
+                } else {
+                    response.getWriter().write("error");
+                }
+                response.getWriter().flush(); // Ensure the response is flushed
+                response.getWriter().close(); // Ensure the writer is closed
+            }
+            case "newComment" -> {
+                Comment c = new Comment();
+                int bookID = Integer.parseInt(request.getParameter("bookID"));
+                String comment = request.getParameter("comment");
+                BigDecimal rating = new BigDecimal(request.getParameter("rating"));
+
+                HttpSession session = request.getSession(false); // Use false to prevent creating a new session if one doesn't exist
+                if (session != null) {
+                    int userID = (int) session.getAttribute("userID");
+                    c = new Comment(bookID, userID, comment, rating);
+                    int res = c.newComment(c);
+                    System.out.println("new comment id: " + res);
+                    if (res > 0) {
+                        response.getWriter().write("success");
+                    } else {
+                        response.getWriter().write("error");
+                    }
+                } else {
+                    request.getRequestDispatcher("Authenticate?action=loginForm").forward(request, response);
+                }
+
             }
             case "filter" -> {
                 String by = (String) request.getParameter("by");
@@ -502,20 +571,7 @@ public class BookAction extends HttpServlet {
                 response.getWriter().flush(); // Ensure the response is flushed
                 response.getWriter().close(); // Ensure the writer is closed
             }
-          case "calNoReviews" -> {
-                Comment c = new Comment();
-                System.out.println("Calculating number of reviews");
-                int bookID = Integer.parseInt(request.getParameter("bookID"));
-                int res = c.noReviewsByBookID(bookID);
-                System.out.println("no reviews: " + res);
-                if (res > -1) {
-                    response.getWriter().write(String.valueOf(res));
-                } else {
-                    response.getWriter().write("error");
-                }
-                response.getWriter().flush(); // Ensure the response is flushed
-                response.getWriter().close(); // Ensure the writer is closed
-            }
+
             case "updateOrderQuantity" -> {
                 int cartItemID = Integer.parseInt(request.getParameter("cartItemID"));
                 int newQuantity = Integer.parseInt(request.getParameter("newQuantity"));
@@ -667,6 +723,35 @@ public class BookAction extends HttpServlet {
                 } else {
                     out.println("<script>console.log(\"Failed place order!\");</script>");
                     request.getRequestDispatcher("BookAction?action=proceedToCheckout").include(request, response);
+                }
+            }
+            case "sentContactEmail" -> {
+                String uName = request.getParameter("name");
+                String email = request.getParameter("email");
+                String pwd = request.getParameter("pwd");
+                String subject = request.getParameter("subject");
+                String message = request.getParameter("message");
+
+                String emailBody = """
+        Dear Kittens Bookstore Team,
+        
+        I hope this message finds you well. My name is """ + uName + """
+        , and I am reaching out to inquire about """ + subject + "\n"
+                        + message
+                        + "\n\nThank you for your time and support. I look forward to your response."
+                        + "\n\nBest regards,\n" + uName;
+
+                try {
+                    int e = sendContactEmail(email, pwd, subject, emailBody);
+                    System.out.println("Email sent status: " + e);
+                    if (e > 0) {
+                        out.println("<script>alert(\"Send email contact successful!\");</script>");
+                    } else {
+                        out.println("<script>alert(\"Send email contact failed!\");</script>");
+                    }
+                } catch (MessagingException ex) {
+                    System.out.println("Error occurred while sending email: " + ex.getMessage());
+                    out.println("<script>alert(\"Sorry, it seems that our mail server is not responding. Please try again later!\");</script>");
                 }
             }
         }

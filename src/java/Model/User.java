@@ -1,6 +1,5 @@
 package Model;
 
-
 import java.io.Serializable;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -14,6 +13,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import loginGoogle.UserGoogleDto;
 
 public class User implements Serializable, DatabaseInfo {
 
@@ -45,7 +45,8 @@ public class User implements Serializable, DatabaseInfo {
         this.gender = gender;
         this.avatar = avatar;
     }
-    public User( String userName, String password, String roles, String email, String phoneNum, String name, Date dob, String gender, String avatar) {
+
+    public User(String userName, String password, String roles, String email, String phoneNum, String name, Date dob, String gender, String avatar) {
 
         this.userName = userName;
         this.password = password;
@@ -57,6 +58,7 @@ public class User implements Serializable, DatabaseInfo {
         this.gender = gender;
         this.avatar = avatar;
     }
+
     // Getters and setters
     public int getUserID() {
         return userID;
@@ -215,6 +217,32 @@ public class User implements Serializable, DatabaseInfo {
         }
         return s;
     }
+        public User loginByEmail(String email) throws Exception {
+        User s = null;
+        try (Connection con = getConnect()) {
+            PreparedStatement stmt = con.prepareStatement("SELECT UserID, UserName, Passwords, Roles, Email, PhoneNum, Names, DOB, Gender, Avatar FROM Users WHERE Email=?");
+            stmt.setString(1, email);
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                int userIDs = rs.getInt("UserID");
+                String userNames = rs.getString("UserName");
+                String passwords = rs.getString("Passwords");
+                String roless = rs.getString("Roles");
+                String emails = rs.getString("Email");
+                String phoneNums = rs.getString("PhoneNum");
+                String names = rs.getString("Names");
+                java.sql.Date dobs = rs.getDate("DOB");
+                String genders = rs.getString("Gender");
+                String avatars = rs.getString("Avatar");
+
+                s = new User(userIDs, userNames, passwords, roless, emails, phoneNums, names, dobs, genders, avatars);
+            }
+
+        } catch (Exception ex) {
+            Logger.getLogger(User.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return s;
+    }
 
     public int newUser(User u) {
         int id = -1;
@@ -245,6 +273,43 @@ public class User implements Serializable, DatabaseInfo {
         return id;
     }
 
+    public int newUserGoogle(UserGoogleDto u) {
+        int id = -1;
+        try (Connection con = getConnect()) {
+            String sql = """
+                     INSERT INTO Users ( Roles, Email, Names, Avatar)
+                     OUTPUT inserted.UserID
+                     VALUES (?, ?, ?, ?)
+                     """;
+            PreparedStatement stmt = con.prepareStatement(sql);
+            stmt.setString(1, "user");
+            stmt.setString(2, u.getEmail());
+            stmt.setString(3, u.getFamily_name() + u.getGiven_name());
+            stmt.setString(4, u.getPicture());
+
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                id = rs.getInt(1);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(User.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return id;
+    }
+
+    public User checkExistedEmail(String email) throws SQLException {
+        if(email!= null && !email.isEmpty()){
+            User u = new User();
+            ArrayList<User> uList = u.getAllUsers();
+            for(User d : uList){
+                if(email.equals(d.getEmail())){
+                    return d;
+                }
+            }
+        }
+        return null;
+    }
+
     public User getLargestRatingUser(int bookID) {
         User s = null;
         try (Connection con = getConnect()) {
@@ -262,7 +327,7 @@ public class User implements Serializable, DatabaseInfo {
             ResultSet rs = stmt.executeQuery();
             if (rs.next()) {
                 s = new User(rs.getInt(1), rs.getString(2), rs.getString(3),
-                        rs.getString(4), rs.getString(5), rs.getString(6), 
+                        rs.getString(4), rs.getString(5), rs.getString(6),
                         rs.getString(7), rs.getDate(8), rs.getString(9), rs.getString(10));
             }
             con.close();
@@ -283,7 +348,7 @@ public class User implements Serializable, DatabaseInfo {
             stmt.setInt(1, userID);
             ResultSet rs = stmt.executeQuery();
             while (rs.next()) {
-                list.add(new Address(rs.getInt(1),rs.getString(2),rs.getString(3),rs.getString(4)));
+                list.add(new Address(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4)));
             }
             con.close();
             return list;
@@ -292,13 +357,68 @@ public class User implements Serializable, DatabaseInfo {
         }
         return null;
     }
-    
+
+    public ArrayList<User> getAllUsers() throws SQLException {
+        ArrayList<User> users = new ArrayList<>();
+        String query = "SELECT * FROM Users";
+
+        try (Connection con = getConnect()) {
+            PreparedStatement stmt = con.prepareStatement(query);
+            ResultSet rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                User user = new User();
+                user.setUserID(rs.getInt("UserID"));
+                user.setUserName(rs.getString("UserName"));
+                user.setPassword(rs.getString("Passwords")); // Note: Passwords from your schema
+                user.setRoles(rs.getString("Roles"));
+                user.setEmail(rs.getString("Email"));
+                user.setPhoneNum(rs.getString("PhoneNum"));
+                user.setName(rs.getString("Names"));
+                user.setDob(rs.getString("DOB"));
+                user.setGender(rs.getString("Gender"));
+                user.setAvatar(rs.getString("Avatar"));
+
+                users.add(user);
+            }
+        }
+
+        return users;
+    }
+       public User getUserByEmail(String email) throws SQLException {
+        User users = new User();
+
+        try (Connection con = getConnect()) {
+            
+            PreparedStatement stmt = con.prepareStatement("SELECT * FROM Users where email=?");
+            stmt.setString(1, email);
+            ResultSet rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                User user = new User();
+                user.setUserID(rs.getInt("UserID"));
+                user.setUserName(rs.getString("UserName"));
+                user.setPassword(rs.getString("Passwords")); // Note: Passwords from your schema
+                user.setRoles(rs.getString("Roles"));
+                user.setEmail(rs.getString("Email"));
+                user.setPhoneNum(rs.getString("PhoneNum"));
+                user.setName(rs.getString("Names"));
+                user.setDob(rs.getString("DOB"));
+                user.setGender(rs.getString("Gender"));
+                user.setAvatar(rs.getString("Avatar"));
+            }
+        }
+
+        return users;
+    }
+
+
     public static void main(String[] args) throws Exception {
         // Đối tượng Date được tạo bằng cách sử dụng phương thức Date.valueOf("YYYY-MM-DD")
         // Giá trị thời gian là một ngày cụ thể
 
-       User s = new User("ad", "123", "", "huyen@gmail.com", "1234567890","thanh", Date.valueOf("2022-10-01"), "female", "de.jpg");
-        System.out.println(s.newUser(s));
+        User s = new User("ad", "123", "", "huyen@gmail.com", "1234567890", "thanh", Date.valueOf("2022-10-01"), "female", "de.jpg");
+        System.out.println(s.loginByEmail("huyenhyomin@gmail.com"));
     }
 
 }

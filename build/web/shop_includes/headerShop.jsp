@@ -197,7 +197,7 @@
                 <div class="d-inline-flex">
                     <p class="m-0"><a href="index.html">Home</a></p>
                     <p class="m-0 px-2">-</p>
-                    <p class="m-0">Shop</p>
+                    <p class="m-0"><a href="BookAction?action=filter&by=none">Shop</a></p>
                 </div>
             </div>
         </div>
