@@ -82,7 +82,7 @@ public class Authenticate extends HttpServlet {
                 }
             }
             case "logout" -> {
-                if (session != null && session.getAttribute("userName") != null) {//nếu đã đăng nhập được
+                if (session != null && session.getAttribute("user") != null) {//nếu đã đăng nhập được
                     session.invalidate();
                     out.println("<script> alert(\"Logout successful!\");</script>");
                     request.getRequestDispatcher("index.jsp").include(request, response);
